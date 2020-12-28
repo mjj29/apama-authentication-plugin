@@ -33,7 +33,7 @@ jobs:
       matrix:
         include:
           - run-id: linux
-            os: ubuntu-20.04
+            os: ubuntu-latest
             upload-docs: true
             
 #          - run-id: win
@@ -101,7 +101,6 @@ jobs:
         shell: bash
         if: runner.os != 'Windows'
         run: |
-          sudo apt install -y libcrypt-dev
           g++ -std=c++11 -o $APAMA_WORK/lib/libAuthenticationPlugin.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I. -shared -lcrypt -fPIC AuthenticationPlugin.cpp
 
       - name: PySys tests
@@ -110,7 +109,6 @@ jobs:
         id: pysys
         run: |
           ldd /opt/softwareag/apama-work/lib/libAuthenticationPlugin.so
-          find /usr -name libcrypt*
           $APAMA_PYSYS run -Xeplcoverage --outdir=`pwd`/__pysys_output/${{matrix.run-id}} 
 
       # If any tests fail, PySys will return an error code, so later steps will not run unless explicitly enabled with "if"

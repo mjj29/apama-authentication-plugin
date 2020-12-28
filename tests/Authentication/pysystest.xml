@@ -2,7 +2,7 @@
 <pysystest type="auto" state="runnable">
     
   <description> 
-    <title>Test the status line in a correlator with and without jemalloc</title>
+    <title>Test the Authentication database</title>
     <purpose><![CDATA[
 ]]>
     </purpose>
