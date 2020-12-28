@@ -1,0 +1,61 @@
+using com.apamax.authentication.HTTPBasic;
+using com.softwareag.connectivity.httpclient.Request;
+using com.apama.exceptions.Exception;
+
+monitor Test
+{
+	action onload()
+	{
+		HTTPBasic fromAuth := HTTPBasic.createFromAuth("Basic Zm9vOmJhcg==");
+		HTTPBasic fromCreds := HTTPBasic.createFromCreds("foo", "bar");
+
+		Asserts.assertEquals("authFromAuth", fromAuth.getAuthHeader(), "Basic Zm9vOmJhcg==");
+		Asserts.assertEquals("authFromCreds", fromCreds.getAuthHeader(), "Basic Zm9vOmJhcg==");
+
+		Asserts.assertEquals("userFromAuth", fromAuth.getUser(), "foo");
+		Asserts.assertEquals("userFromCreds", fromCreds.getUser(), "foo");
+
+		Asserts.assertEquals("passFromAuth", fromAuth.getPassword(), "bar");
+		Asserts.assertEquals("passFromCreds", fromCreds.getPassword(), "bar");
+
+		Request r := new Request;
+		fromAuth.addAuthHeader(r);
+		Asserts.assertEquals("requestFromAuth", r.getHeader("Authorization"), "Basic Zm9vOmJhcg==");
+
+		r := new Request;
+		fromCreds.addAuthHeader(r);
+		Asserts.assertEquals("requestFromCreds", r.getHeader("Authorization"), "Basic Zm9vOmJhcg==");
+
+		try {
+			HTTPBasic illegal := HTTPBasic.createFromAuth("Wibble Zm9vOmJhcg=="); // Not Basic
+			Asserts.assert("illegal1", false);
+		} catch (Exception e) {
+			Asserts.assertEquals("illegal1 type", e.getType(), "IllegalArgumentException");
+			Asserts.assertEquals("illegal1 message", e.getMessage(), "Auth string is not a basic auth string");
+		}
+
+		try {
+			HTTPBasic illegal := HTTPBasic.createFromAuth("Basic Zm9vYmFy"); // no : in string
+			Asserts.assert("illegal2", false);
+		} catch (Exception e) {
+			Asserts.assertEquals("illegal2 type", e.getType(), "IllegalArgumentException");
+			Asserts.assertEquals("illegal2 message", e.getMessage(), "Auth string is not a basic auth string");
+		}
+
+		try {
+			HTTPBasic illegal := HTTPBasic.createFromAuth("Basic Zm9vOmJhcjpiYXo="); // two :s in string
+			Asserts.assert("illegal3", false);
+		} catch (Exception e) {
+			Asserts.assertEquals("illegal3 type", e.getType(), "IllegalArgumentException");
+			Asserts.assertEquals("illegal3 message", e.getMessage(), "Auth string is not a basic auth string");
+		}
+
+		try {
+			HTTPBasic illegal := HTTPBasic.createFromAuth("Basic foobarbaz"); // not a base64 string
+			Asserts.assert("illegal4", false);
+		} catch (Exception e) {
+			Asserts.assertEquals("illegal4 type", e.getType(), "IllegalArgumentException");
+			Asserts.assertEquals("illegal4 message", e.getMessage(), "Auth string is not a basic auth string");
+		}
+	}
+}

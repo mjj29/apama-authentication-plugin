@@ -1,0 +1,10 @@
+using com.apamax.authentication.Base64;
+
+monitor Test
+{
+	action onload()
+	{
+		Asserts.assertEquals("encode", Base64.encode("test"), "dGVzdA==");
+		Asserts.assertEquals("decode", Base64.decode("dGVzdA=="), "test");
+	}
+}

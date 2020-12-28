@@ -1,0 +1,59 @@
+using com.apamax.authentication.Authentication;
+using com.apamax.authentication.AuthenticationInitialized;
+using com.apamax.authentication.HTTPBasic;
+using com.softwareag.connectivity.httpclient.Request;
+using com.apama.memorystore.Storage;
+using com.apama.memorystore.Store;
+using com.apama.memorystore.Finished;
+
+event TestRun
+{
+	string pathpath;
+	string storepath;
+	boolean initial;
+}
+
+monitor Test
+{
+	action onload()
+	{
+		on all TestRun() as tr {
+			on Finished(id=Storage.prepareOrCreate("teststore", tr.storepath)) {
+				Store store := Storage.open("teststore");
+				testAuthentication("fromStore", Authentication.createFromStore(store), true, tr.initial);
+			}
+			testAuthentication("fromPath", Authentication.createFromPath(tr.pathpath), true, tr.initial);
+			testAuthentication("inMemory", Authentication.createInMemory(), false, tr.initial);
+		}
+	}
+	action testAuthentication(string run, Authentication auth, boolean persists, boolean initial)
+	{
+		on AuthenticationInitialized(auth.initialize()) {
+			log "Starting tests for "+run at INFO;
+			Asserts.assertEquals("hasUserNonExistent", auth.hasUser("bar"), false);
+			Asserts.assertEquals("hasUserExistent", auth.hasUser("foo"), persists and not initial);
+			Asserts.assertEquals("checkUserRecovered", auth.checkUser("foo", "bar"), persists and not initial);
+			auth.addUser("foo", "bar");
+			auth.addUser("baz", "bar");
+			Asserts.assertEquals("hasUserAdded1", auth.hasUser("foo"), true);
+			Asserts.assertEquals("hasUserAdded2", auth.hasUser("baz"), true);
+			auth.removeUser("baz");
+			Asserts.assertEquals("hasUserRemoved", auth.hasUser("baz"), false);
+			Asserts.assertEquals("checkUserValid", auth.checkUser("foo", "bar"), true);
+			Asserts.assertEquals("checkUserWrongPW", auth.checkUser("foo", "baz"), false);
+			Asserts.assertEquals("checkUserNonExistent", auth.checkUser("bar", "bar"), false);
+			Asserts.assertEquals("checkUserRemoved", auth.checkUser("baz", "bar"), false);
+
+			HTTPBasic basic := HTTPBasic.createFromCreds("foo", "bar");
+			Request req := new Request;
+			basic.addAuthHeader(req);
+			Asserts.assertEquals("checkHeaderValid", auth.checkHeader(basic.getAuthHeader()), "foo");
+			Asserts.assertEquals("checkRequestValid", auth.checkRequest(req), "foo");
+			basic := HTTPBasic.createFromCreds("foo", "baz");
+			basic.addAuthHeader(req);
+			Asserts.assertEquals("checkHeaderInvalid", auth.checkHeader(basic.getAuthHeader()), "");
+			Asserts.assertEquals("checkRequestInvalid", auth.checkRequest(req), "");
+			log "Completed tests for "+run at INFO;
+		}
+	}
+}

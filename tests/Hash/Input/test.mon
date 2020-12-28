@@ -1,0 +1,13 @@
+using com.apamax.authentication.Base64;
+
+monitor Test
+{
+	import "AuthenticationPlugin" as plugin;
+	action onload()
+	{
+		Asserts.assertEquals("salt", plugin.hash("password", "$1$salt$"), "$1$salt$qJH7.N4xYta3aEG/dfqo/0");
+		Asserts.assertEquals("password", plugin.hash("password", "$1$salt$qJH7.N4xYta3aEG/dfqo/0"), "$1$salt$qJH7.N4xYta3aEG/dfqo/0");
+		Asserts.assert("no salt", plugin.hash("password", "") != "$1$$I2o9Z7NcvQAKp7wyCTlia0");
+		Asserts.assert("no salt", 0 = plugin.hash("password", "").find("$1$"));
+	}
+}

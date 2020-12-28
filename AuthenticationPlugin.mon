@@ -1,0 +1,196 @@
+/**
+ * Title:        AuthenticationPlugin.mon
+ * Description:  Authentication utilities
+ * Copyright (c) 2020 Software AG, Darmstadt, Germany andor its licensors
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at
+ * http:/www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
+package com.apamax.authentication;
+
+using com.softwareag.connectivity.httpclient.Request;
+using com.apama.memorystore.Storage;
+using com.apama.memorystore.Store;
+using com.apama.memorystore.Table;
+using com.apama.memorystore.Finished;
+using com.apama.memorystore.Row;
+using com.apama.memorystore.Iterator;
+using com.apama.exceptions.Exception;
+
+event Base64
+{
+	import "AuthenticationPlugin" as plugin;
+	static action encode(string s) returns string
+	{
+		return plugin.base64encode(s);
+	}
+	static action decode(string s) returns string
+	{
+		return plugin.base64decode(s);
+	}
+}
+
+event HTTPBasic
+{
+	import "AuthenticationPlugin" as plugin;
+
+	static action createFromAuth(string auth) returns HTTPBasic
+	{
+		if not 0 = auth.find("Basic ") {
+			throw Exception("Auth string is not a basic auth string", "IllegalArgumentException");
+		}
+		string b64 := auth.substring(6, -1);
+		string decoded := Base64.decode(b64);
+		sequence<string> components := ":".split(decoded);
+		if not 2 = components.size() {
+			throw Exception("Auth string is not a basic auth string", "IllegalArgumentException");
+		}
+		return HTTPBasic(components[0], components[1]); 
+	}
+
+	static action createFromCreds(string username, string password) returns HTTPBasic
+	{
+		return HTTPBasic(username, password);
+	}
+
+	action getUser() returns string { return username; }
+	action getPassword() returns string { return password; }
+	action getAuthHeader() returns string
+	{
+		return "Basic "+Base64.encode(username+":"+password);
+	}
+	action addAuthHeader(Request req)
+	{
+		req.setHeader("Authorization", getAuthHeader());
+	}
+	string username;
+	string password;
+}
+
+event User
+{
+	string name;
+	string password;
+}
+
+event AuthenticationInitialized
+{
+	integer id;
+}
+
+event Authentication
+{
+	import "AuthenticationPlugin" as plugin;
+
+	static action createFromStore(Store s) returns Authentication
+	{
+		Authentication a := new Authentication;
+		a.initMode := INIT_FROM_STORE;
+		a.store := s;
+		return a;
+	}
+
+	static action createFromPath(string path) returns Authentication
+	{
+		Authentication a := new Authentication;
+		a.initMode := INIT_FROM_PATH;
+		a.path := path;
+		return a;
+	}
+
+	static action createInMemory() returns Authentication
+	{
+		Authentication a := new Authentication;
+		a.initMode := INIT_IN_MEMORY;
+		return a;
+	}
+
+	action initialize() returns integer
+	{
+		integer id := integer.incrementCounter("c.apx.auth.Authentication");
+		if INIT_IN_MEMORY = initMode {
+			on Finished(id=storage.prepareInMemory("c.apx.auth.Authentication.Memory")) {
+				store := storage.open("c.apx.auth.Authentication.Memory");
+				on Finished(id=store.prepareFromAny(new User)) {
+					users := store.open("com.apamax.authentication.User");
+					route AuthenticationInitialized(id);
+				}
+			}
+		} else if INIT_FROM_PATH = initMode {
+			on Finished(id=storage.prepareOrCreate("c.apx.auth.Authentication.Disk", path)) {
+				store := storage.open("c.apx.auth.Authentication.Disk");
+				on Finished(id=store.prepareFromAny(new User)) {
+					users := store.open("com.apamax.authentication.User");
+					route AuthenticationInitialized(id);
+				}
+			}
+		} else if INIT_FROM_STORE = initMode {
+			on Finished(id=store.prepareFromAny(new User)) {
+				users := store.open("com.apamax.authentication.User");
+				route AuthenticationInitialized(id);
+			}
+		} else {
+			throw Exception("Incorrect initialization mode", "IllegalArgumentException");
+		}
+		return id;
+	}
+
+	Storage storage;
+	string path;
+	integer initMode;
+	constant integer INIT_FROM_STORE := 0;
+	constant integer INIT_FROM_PATH := 1;
+	constant integer INIT_IN_MEMORY := 2;
+	Store store;
+	Table users;
+
+	action addUser(string username, string password)
+	{
+		Row r := users.get(username);
+		r.setAll(User(username, plugin.hash(password, "")));
+		r.forceCommit();
+		integer _ := users.persist();
+	}
+
+	action removeUser(string username)
+	{
+		Row r := users.get(username);
+		r.remove();
+		r.forceCommit();
+		integer _ := users.persist();
+	}
+
+	action hasUser(string username) returns boolean
+	{
+		Row r := users.get(username);
+		return r.inTable();
+	}
+
+	action checkUser(string username, string password) returns boolean
+	{
+		Row r := users.get(username);
+		return r.inTable() and r.getString("password") = plugin.hash(password, r.getString("password"));
+	}
+
+	action checkHeader(string authHeader) returns string
+	{
+		HTTPBasic basic := HTTPBasic.createFromAuth(authHeader);
+		if (checkUser(basic.getUser(), basic.getPassword())) {
+			return basic.getUser();
+		} else {
+			return "";
+		}
+	}
+
+	action checkRequest(Request req) returns string
+	{
+		return checkHeader(req.getHeader("Authorization"));
+	}
+}
+

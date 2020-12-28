@@ -1,0 +1,128 @@
+# Sample workflow that installs Apama Community Edition and uses it build and run PySys tests for an Apama application. 
+
+# Compilation of Java and C++ plugins, and upload of ApamaDoc HTML to GitHub Pages is also demonstrated. 
+# As the C++ compilation required some time-consuming setup on Windows, remove those steps from the workflow 
+# unless you actually have some custom C++ plugins you need to compile.
+
+# Use of the setup-apama action implies that you have agreed to the terms of the Software AG license agreement; 
+# see http://www.apamacommunity.com/terms-conditions/
+
+# This workflow is Copyright (C) 2020 Software AG, Darmstadt, Germany and/or its licensors
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+
+name: Apama
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    env:
+      # The 4-digit version to download from http://www.apamacommunity.com/downloads/
+      SETUP_APAMA_VERSION: 10.5.3.2
+
+    strategy:
+      # Disable fail fast since it's useful to see test results for all platforms even if some failed
+      fail-fast: false
+      
+      matrix:
+        include:
+          - run-id: linux
+            os: ubuntu-latest
+            upload-docs: true
+            
+#          - run-id: win
+#            os: windows-latest
+            
+    runs-on: ${{matrix.os}}
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cached Apama installation
+        # The always-upload actions is a fork of actions/cache allows cache to be saved even if some later steps (e.g. testing) fail
+        uses: pat-s/always-upload-cache@v2.1.3
+        with:
+            path: ~/cached-apama-installation.tar
+            # To use a clean cache, update the number at the end of this key
+            key: apama-${{ runner.os }}-${{ env.SETUP_APAMA_VERSION }}-cache1
+
+      - uses: ApamaCommunity/github-action-setup-apama@v1.0.2
+        # The setup-apama action installs Apama, as well as bundled tools such as Python 3 and a Java JDK, and adds them 
+        # all to environment (as if the apama_env script had been executed/sourced), ready for use in subsequent actions. 
+        # Note that use of this action in a workflow implies you have agreed to the Software AG license agreement.
+        with:
+          apama-version: ${{ env.SETUP_APAMA_VERSION }}
+
+      - name: Build ApamaDoc
+        shell: bash
+        run: |
+          apamadoc ./__apamadoc ./AuthenticationPlugin.mon
+     
+      - name: Upload ApamaDoc to gh-pages
+        if: matrix.upload-docs
+        uses: JamesIves/github-pages-deploy-action@3.6.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: __apamadoc
+
+      # TODO: remove these C++ setup and build actions unless compiling custom C++/Java plugins is required 
+      # (especially on Windows, as it's quite time-consuming to install the SDK)
+      - name: Install Windows 8.1 SDK (C++)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Method Get -Uri https://go.microsoft.com/fwlink/p/?LinkId=323507 -OutFile sdksetup.exe -UseBasicParsing
+          Get-Date
+          Start-Process -Wait sdksetup.exe -ArgumentList "/q", "/norestart", "/features", "OptionId.WindowsDesktopSoftwareDevelopmentKit", "OptionId.NetFxSoftwareDevelopmentKit"
+      - name: Setup Visual Studio
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: '[14,17]'
+      - name: Build custom C++ plugins (Windows)
+        shell: cmd
+        if: runner.os == 'Windows'
+        run: |
+          pushd %APAMA_HOME%\samples\correlator_plugin\cpp
+          msbuild /p:platform=x64 correlator_plugin_cpp_api.sln
+
+          mkdir %GITHUB_WORKSPACE%\src\lib
+          echo Copying into Apama project dir:
+          copy Release\*.dll %GITHUB_WORKSPACE%\src\lib
+          copy Release\*.pdb %GITHUB_WORKSPACE%\src\lib
+      - name: Build custom C++ plugins (Linux)
+        shell: bash
+        if: runner.os != 'Windows'
+        run: |
+          g++ -std=c++11 -o $APAMA_WORK/lib/libAuthenticationPlugin.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I. -shared -lcrypt -fPIC AuthenticationPlugin.cpp
+
+      - name: PySys tests
+        working-directory: test
+        shell: bash
+        id: pysys
+        run: |
+          cd tests
+          $APAMA_PYSYS run --threads=auto --record --purge --printLogs=FAILURES -Xeplcoverage -XcodeCoverage --mode=ALL --outdir=`pwd`/__pysys_output/${{matrix.run-id}} 
+
+      # If any tests fail, PySys will return an error code, so later steps will not run unless explicitly enabled with "if"
+
+      - name: Upload archive artifacts for any test failures
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: pysys_output_${{matrix.run-id}}
+          path: test/__pysys_output/${{matrix.run-id}}
+
+      - name: Upload EPL code coverage report
+        uses: actions/upload-artifact@v2
+        if: success()
+        with:
+          name: pysys_epl_coverage_${{matrix.run-id}}
+          path: test/__pysys_output/${{matrix.run-id}}/eplcoverage
