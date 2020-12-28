@@ -45,7 +45,7 @@ event HTTPBasic
 		if not 0 = auth.find("Basic ") {
 			throw Exception("Auth string is not a basic auth string", "IllegalArgumentException");
 		}
-		string b64 := auth.substring(6, -1);
+		string b64 := auth.substring(6, auth.length());
 		string decoded := Base64.decode(b64);
 		sequence<string> components := ":".split(decoded);
 		if not 2 = components.size() {
@@ -156,6 +156,7 @@ event Authentication
 		r.setAll(User(username, plugin.hash(password, "")));
 		r.forceCommit();
 		integer _ := users.persist();
+		log "Added user "+username at DEBUG;
 	}
 
 	action removeUser(string username)
@@ -164,6 +165,7 @@ event Authentication
 		r.remove();
 		r.forceCommit();
 		integer _ := users.persist();
+		log "Removed user "+username at DEBUG;
 	}
 
 	action hasUser(string username) returns boolean
