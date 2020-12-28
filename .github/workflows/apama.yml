@@ -33,7 +33,7 @@ jobs:
       matrix:
         include:
           - run-id: linux
-            os: ubuntu-latest
+            os: ubuntu-20.04
             upload-docs: true
             
 #          - run-id: win
@@ -101,7 +101,7 @@ jobs:
         shell: bash
         if: runner.os != 'Windows'
         run: |
-          sudo apt install libcrypt1
+          sudo apt install -y libcrypt-dev
           g++ -std=c++11 -o $APAMA_WORK/lib/libAuthenticationPlugin.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I. -shared -lcrypt -fPIC AuthenticationPlugin.cpp
 
       - name: PySys tests
