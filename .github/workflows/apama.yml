@@ -108,9 +108,7 @@ jobs:
         shell: bash
         id: pysys
         run: |
-          pwd
-          ls
-          $APAMA_PYSYS run --threads=auto --record --purge --printLogs=FAILURES -Xeplcoverage -XcodeCoverage --mode=ALL --outdir=`pwd`/__pysys_output/${{matrix.run-id}} 
+          $APAMA_PYSYS run 
 
       # If any tests fail, PySys will return an error code, so later steps will not run unless explicitly enabled with "if"
 
