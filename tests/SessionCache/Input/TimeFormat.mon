@@ -1,0 +1,9 @@
+package com.apama.correlator.timeformat;
+
+event TimeFormat
+{
+	static action getSystemTime() returns float
+	{
+		return currentTime;
+	}
+}

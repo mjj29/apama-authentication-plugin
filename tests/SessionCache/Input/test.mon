@@ -13,6 +13,11 @@ monitor Test
 		string token3 := session.add("user2");
 		string token4 := session.add("user4");
 
+		log token1;
+		log token2;
+		log token3;
+		log token4;
+
 		Asserts.assertEquals("added1", session.check(token1), "user1");
 		Asserts.assertEquals("added2", session.check(token2), "user2");
 		Asserts.assertEquals("added3", session.check(token3), "user2");

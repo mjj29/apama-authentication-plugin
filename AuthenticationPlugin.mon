@@ -87,6 +87,7 @@ event AuthenticationInitialized
 
 event SessionCacheEntry
 {
+	import "AuthenticationPlugin" as plugin;
 	string token;
 	string user;
 	float created;
@@ -95,7 +96,7 @@ event SessionCacheEntry
 	{
 		SessionCacheEntry entry := new SessionCacheEntry;
 		entry.user := user;
-		entry.token := "token"+integer.incrementCounter("SessionCacheEntry").toString();/*TODO*/
+		entry.token := plugin.generateToken();
 		entry.created := TimeFormat.getSystemTime();
 		entry.lastSeen := entry.created;
 		return entry;
@@ -103,7 +104,6 @@ event SessionCacheEntry
 	action valid(float timeoutSecs, float maxSessionLength) returns boolean
 	{
 		float now := TimeFormat.getSystemTime();
-		log "token="+token+", now="+now.toString()+", created="+created.toString()+", lastSeen="+lastSeen.toString();
 		return created+maxSessionLength >= now and lastSeen+timeoutSecs >= now;
 	}
 	action update()
@@ -123,26 +123,33 @@ event SessionCache
 		SessionCache cache := new SessionCache;
 		cache.timeoutSecs := timeoutSecs.toFloat();
 		cache.maxSessionLength := maxSessionLength.toFloat();
+
+		// garbage collect the token cache
+		on all wait(timeoutSecs) {
+			string token;
+			for token in cache.keys() {
+				if cache[token].lastSeen+timeoutSecs < now 
+				or cache[token].created+maxSessionLength < now {
+					cache.remove(token);
+				}
+			}
+		}
+
 		return cache;
 	}
 
 	// takes a token, return user or ""
 	action check(string token) returns string
 	{
-		log cache.toString();
 		if cache.hasKey(token) {
-			log "have key "+token;
 			if cache[token].valid(timeoutSecs, maxSessionLength) {
-				log "token valid";
 				cache[token].update();
 				return cache[token].user;
 			} else {
-				log "token not valid";
 				cache.remove(token);
 				return "";
 			}
 		} else {
-			log "don't have key "+token;
 			return "";
 		}
 	}
@@ -160,6 +167,7 @@ event SessionCache
 	action add(string user) returns string
 	{
 		SessionCacheEntry entry := SessionCacheEntry.create(user);
+		log "Adding token for "+user at DEBUG;
 		cache[entry.token] := entry;
 		return entry.token;
 	}
@@ -289,9 +297,10 @@ event Authentication
 event AuthResult
 {
 	constant integer AUTH_FAILED := 0;
-	constant integer TOKEN_EXPIRED := 1;
-	constant integer NEW_TOKEN := 2;
-	constant integer AUTH_SUCCEEDED := 3;
+	constant integer AUTH_REQUIRED := 1;
+	constant integer TOKEN_EXPIRED := 2;
+	constant integer NEW_TOKEN := 3;
+	constant integer AUTH_SUCCEEDED := 4;
 	integer result;
 	string user;
 	string tokenHeader;
@@ -352,6 +361,8 @@ event CachedAuthentication
 				} else {
 					return AuthResult(AuthResult.AUTH_SUCCEEDED, user, authHeader);
 				}
+			} else if "" = authHeader {
+				return AuthResult(AuthResult.AUTH_REQUIRED, "", "");
 			} else {
 				return AuthResult(AuthResult.AUTH_FAILED, "", "");
 			}

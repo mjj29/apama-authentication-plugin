@@ -17,6 +17,7 @@
 #include <inttypes.h>
 #include <base64.h>
 #include <crypt.h>
+#include <fstream>
 
 using namespace com::apama::epl;
 
@@ -44,6 +45,7 @@ public:
 		md.registerMethod<decltype(&AuthenticationPlugin::base64encode), &AuthenticationPlugin::base64encode>("base64encode");
 		md.registerMethod<decltype(&AuthenticationPlugin::base64decode), &AuthenticationPlugin::base64decode>("base64decode");
 		md.registerMethod<decltype(&AuthenticationPlugin::hash), &AuthenticationPlugin::hash>("hash");
+		md.registerMethod<decltype(&AuthenticationPlugin::generateToken), &AuthenticationPlugin::generateToken>("generateToken");
 	}
 
 	std::string base64encode(const char *input)
@@ -77,11 +79,25 @@ public:
 			for (int i = 3; i < 11; ++i) {
 				setting[i] = alphanum[rand()%62];
 			}
+			setting[10]='\0';
 			result = crypt_r(input, setting, &data);
 		} else {
 			result = crypt_r(input, salt, &data);
 		}
 		return result;
+	}
+
+	std::string generateToken()
+	{
+		char token[65];
+		char buf[64];
+		std::ifstream urandom("/dev/urandom");
+		urandom.read(buf, 64);
+		for (int i = 0; i < 64; ++i) {
+			token[i] = alphanum[buf[i]%62];
+		}
+		token[64]='\0';
+		return token; 
 	}
 
 };
