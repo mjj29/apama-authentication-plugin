@@ -58,17 +58,22 @@
 </TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#AUTH_SUCCEEDED">AUTH_SUCCEEDED</A> := 3</B></CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#AUTH_REQUIRED">AUTH_REQUIRED</A> := 1</B></CODE>
 <br>
 </TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#NEW_TOKEN">NEW_TOKEN</A> := 2</B></CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#AUTH_SUCCEEDED">AUTH_SUCCEEDED</A> := 4</B></CODE>
 <br>
 </TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#TOKEN_EXPIRED">TOKEN_EXPIRED</A> := 1</B></CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#NEW_TOKEN">NEW_TOKEN</A> := 3</B></CODE>
+<br>
+</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#TOKEN_EXPIRED">TOKEN_EXPIRED</A> := 2</B></CODE>
 <br>
 </TD>
 </TR>
@@ -103,19 +108,24 @@
 <PRE>constant integer&nbsp;<B>AUTH_FAILED := 0</B>
 </PRE>
 <HR>
+<A NAME="AUTH_REQUIRED"></A>
+<H3>AUTH_REQUIRED</H3>
+<PRE>constant integer&nbsp;<B>AUTH_REQUIRED := 1</B>
+</PRE>
+<HR>
 <A NAME="AUTH_SUCCEEDED"></A>
 <H3>AUTH_SUCCEEDED</H3>
-<PRE>constant integer&nbsp;<B>AUTH_SUCCEEDED := 3</B>
+<PRE>constant integer&nbsp;<B>AUTH_SUCCEEDED := 4</B>
 </PRE>
 <HR>
 <A NAME="NEW_TOKEN"></A>
 <H3>NEW_TOKEN</H3>
-<PRE>constant integer&nbsp;<B>NEW_TOKEN := 2</B>
+<PRE>constant integer&nbsp;<B>NEW_TOKEN := 3</B>
 </PRE>
 <HR>
 <A NAME="TOKEN_EXPIRED"></A>
 <H3>TOKEN_EXPIRED</H3>
-<PRE>constant integer&nbsp;<B>TOKEN_EXPIRED := 1</B>
+<PRE>constant integer&nbsp;<B>TOKEN_EXPIRED := 2</B>
 </PRE>
 <HR>
 <A NAME="member_detail"></A>
