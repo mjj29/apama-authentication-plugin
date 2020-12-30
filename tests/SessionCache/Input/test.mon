@@ -1,0 +1,45 @@
+using com.apamax.authentication.SessionCache;
+
+monitor Test
+{
+	action onload()
+	{
+		SessionCache session := SessionCache.create(10, 30);
+
+		Asserts.assertEquals("none", session.check("foo"), "");
+
+		string token1 := session.add("user1");
+		string token2 := session.add("user2");
+		string token3 := session.add("user2");
+		string token4 := session.add("user4");
+
+		Asserts.assertEquals("added1", session.check(token1), "user1");
+		Asserts.assertEquals("added2", session.check(token2), "user2");
+		Asserts.assertEquals("added3", session.check(token3), "user2");
+		Asserts.assertEquals("addedHeader1", session.checkHeader("CacheToken "+token1), "user1");
+		Asserts.assertEquals("addedHeader2", session.checkHeader("CacheToken "+token2), "user2");
+		Asserts.assertEquals("addedHeader3", session.checkHeader("CacheToken "+token3), "user2");
+	
+		session.expireAll("user2");
+		Asserts.assertEquals("expired1", session.check(token2), "");
+		Asserts.assertEquals("expired2", session.check(token3), "");
+
+		on wait (5.) {
+			log "timer - 5s" at INFO;
+			Asserts.assertEquals("5s", session.check(token1), "user1");
+		}
+		on wait (13.) {
+			log "timer - 13s" at INFO;
+			Asserts.assertEquals("13s1", session.check(token1), "user1");
+			Asserts.assertEquals("13s2", session.check(token4), ""); // expired
+		}
+		on wait (22.) {
+			log "timer - 22s" at INFO;
+			Asserts.assertEquals("22s", session.check(token1), "user1");
+		}
+		on wait (31.) {
+			log "timer - 31s" at INFO;
+			Asserts.assertEquals("31s", session.check(token1), ""); // reached max length
+		}
+	}
+}

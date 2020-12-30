@@ -15,6 +15,7 @@
 package com.apamax.authentication;
 
 using com.softwareag.connectivity.httpclient.Request;
+using com.apama.correlator.timeformat.TimeFormat;
 using com.apama.memorystore.Storage;
 using com.apama.memorystore.Store;
 using com.apama.memorystore.Table;
@@ -84,6 +85,95 @@ event AuthenticationInitialized
 	integer id;
 }
 
+event SessionCacheEntry
+{
+	string token;
+	string user;
+	float created;
+	float lastSeen;
+	static action create(string user) returns SessionCacheEntry
+	{
+		SessionCacheEntry entry := new SessionCacheEntry;
+		entry.user := user;
+		entry.token := "token"+integer.incrementCounter("SessionCacheEntry").toString();/*TODO*/
+		entry.created := TimeFormat.getSystemTime();
+		entry.lastSeen := entry.created;
+		return entry;
+	}
+	action valid(float timeoutSecs, float maxSessionLength) returns boolean
+	{
+		float now := TimeFormat.getSystemTime();
+		log "token="+token+", now="+now.toString()+", created="+created.toString()+", lastSeen="+lastSeen.toString();
+		return created+maxSessionLength >= now and lastSeen+timeoutSecs >= now;
+	}
+	action update()
+	{
+		self.lastSeen := TimeFormat.getSystemTime();
+	}
+}
+
+event SessionCache
+{
+	dictionary<string, SessionCacheEntry> cache;
+	float timeoutSecs;
+	float maxSessionLength;
+
+	static action create(integer timeoutSecs, integer maxSessionLength) returns SessionCache
+	{
+		SessionCache cache := new SessionCache;
+		cache.timeoutSecs := timeoutSecs.toFloat();
+		cache.maxSessionLength := maxSessionLength.toFloat();
+		return cache;
+	}
+
+	// takes a token, return user or ""
+	action check(string token) returns string
+	{
+		log cache.toString();
+		if cache.hasKey(token) {
+			log "have key "+token;
+			if cache[token].valid(timeoutSecs, maxSessionLength) {
+				log "token valid";
+				cache[token].update();
+				return cache[token].user;
+			} else {
+				log "token not valid";
+				cache.remove(token);
+				return "";
+			}
+		} else {
+			log "don't have key "+token;
+			return "";
+		}
+	}
+
+	action checkHeader(string header) returns string
+	{
+		if not 0 = header.find("CacheToken ") {
+			throw Exception("Auth string is not a cache token string", "IllegalArgumentException");
+		}
+		string token := header.substring(11, header.length());
+		return check(token);
+	}
+
+	// takes a user, returns a token
+	action add(string user) returns string
+	{
+		SessionCacheEntry entry := SessionCacheEntry.create(user);
+		cache[entry.token] := entry;
+		return entry.token;
+	}
+
+	action expireAll(string user)
+	{
+		string token;
+		for token in cache.keys() {
+			if cache[token].user = user {
+				cache.remove(token);
+			}
+		}
+	}
+}
 event Authentication
 {
 	import "AuthenticationPlugin" as plugin;
@@ -195,4 +285,84 @@ event Authentication
 		return checkHeader(req.getHeader("Authorization"));
 	}
 }
+
+event AuthResult
+{
+	constant integer AUTH_FAILED := 0;
+	constant integer TOKEN_EXPIRED := 1;
+	constant integer NEW_TOKEN := 2;
+	constant integer AUTH_SUCCEEDED := 3;
+	integer result;
+	string user;
+	string tokenHeader;
+}
+
+event CachedAuthentication
+{
+	Authentication auth;
+	SessionCache session;
+	static action createFromStore(Store s, integer timeoutSecs, integer maxSessionLength) returns CachedAuthentication
+	{
+		return CachedAuthentication(Authentication.createFromStore(s), SessionCache.create(timeoutSecs, maxSessionLength));
+	}
+	static action createFromPath(string path, integer timeoutSecs, integer maxSessionLength) returns CachedAuthentication
+	{
+		return CachedAuthentication(Authentication.createFromPath(path), SessionCache.create(timeoutSecs, maxSessionLength));
+	}
+	static action createInMemory(integer timeoutSecs, integer maxSessionLength) returns CachedAuthentication
+	{
+		return CachedAuthentication(Authentication.createInMemory(), SessionCache.create(timeoutSecs, maxSessionLength));
+	}
+	action initialize() returns integer
+	{
+		return auth.initialize();
+	}
+	action addUser(string username, string password)
+	{
+		auth.addUser(username, password);
+	}
+	action removeUser(string username)
+	{
+		auth.removeUser(username);
+		session.expireAll(username);
+	}
+	action hasUser(string username) returns boolean
+	{
+		return auth.hasUser(username);
+	}
+	action checkUser(string username, string password) returns boolean
+	{
+		return auth.checkUser(username, password);
+	}
+	action checkHeader(string authHeader) returns AuthResult
+	{
+		try {
+			if 0 = authHeader.find("Basic ") {
+				string user := auth.checkHeader(authHeader);
+				if "" = user {
+					return AuthResult(AuthResult.AUTH_FAILED, user, "");
+				} else {
+					string token := session.add(user);
+					return AuthResult(AuthResult.NEW_TOKEN, user, "CacheToken "+token);
+				}
+			} else if 0 = authHeader.find("CacheToken ") {
+				string user := session.checkHeader(authHeader);
+				if "" = user {
+					return AuthResult(AuthResult.TOKEN_EXPIRED, user, "");
+				} else {
+					return AuthResult(AuthResult.AUTH_SUCCEEDED, user, authHeader);
+				}
+			} else {
+				return AuthResult(AuthResult.AUTH_FAILED, "", "");
+			}
+		} catch (Exception e) {
+			return AuthResult(AuthResult.AUTH_FAILED, "", "");
+		}
+	}
+	action checkRequest(Request req) returns AuthResult
+	{
+		return checkHeader(req.getHeader("Authorization"));
+	}
+}
+
 

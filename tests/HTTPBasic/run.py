@@ -7,7 +7,7 @@ class PySysTest(BaseTest):
 	def execute(self):
 		corr = CorrelatorHelper(self, name='correlator')
 		corr.start(logfile='correlator.log')
-		corr.injectEPL(filenames=['ConnectivityPluginsControl.mon', 'ConnectivityPlugins.mon', 'AnyExtractor.mon', 'data_storage/MemoryStore.mon', 'HTTPClientEvents.mon'], filedir=self.project.APAMA_HOME+'/monitors')
+		corr.injectEPL(filenames=['ConnectivityPluginsControl.mon', 'ConnectivityPlugins.mon', 'AnyExtractor.mon', 'data_storage/MemoryStore.mon', 'HTTPClientEvents.mon', 'TimeFormatEvents.mon'], filedir=self.project.APAMA_HOME+'/monitors')
 		corr.injectEPL('../../../AuthenticationPlugin.mon')
 		tests = os.listdir(self.input);
 		tests.sort()
