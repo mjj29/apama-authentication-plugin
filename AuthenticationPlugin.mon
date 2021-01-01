@@ -24,23 +24,50 @@ using com.apama.memorystore.Row;
 using com.apama.memorystore.Iterator;
 using com.apama.exceptions.Exception;
 
+/**
+  Encoding and decoding support for base-64. Converts between a UTF-8 string and a base-64-encoded string.
+*/
 event Base64
 {
+	/** @private */
 	import "AuthenticationPlugin" as plugin;
+	/**
+	  Encode a string in base-64.
+
+	  @param s The input string.
+	  @returns The string encoded in base-64.
+	  @throws PluginException if the encoding failed.
+	*/
 	static action encode(string s) returns string
 	{
 		return plugin.base64encode(s);
 	}
+	/**
+	  Decode a string from base-64.
+
+	  @param s A base-64 encoded string.
+	  @returns The decoded string.
+	  @throws PluginException if the decoding failed.
+	*/
 	static action decode(string s) returns string
 	{
 		return plugin.base64decode(s);
 	}
 }
 
+/**
+  Read and create HTTP basic headers.
+*/
 event HTTPBasic
 {
+	/** private */
 	import "AuthenticationPlugin" as plugin;
 
+	/** Create an HTTPBasic object from an Authorization header.
+		@param auth A correctly formatted Authorization header (eg "Basic mXwvknIEinIne=").
+		@returns A new HTTPBasic object representing the encapsulated authentication data.
+		@throws IllegalArgumentException if auth is not a properly formatted header.
+	*/
 	static action createFromAuth(string auth) returns HTTPBasic
 	{
 		if not 0 = auth.find("Basic ") {
@@ -55,43 +82,68 @@ event HTTPBasic
 		return HTTPBasic(components[0], components[1]); 
 	}
 
+	/** Create an HTTPBasic object from a username and password.
+		@returns A new HTTPBasic object representing the given authentication data.
+	*/
 	static action createFromCreds(string username, string password) returns HTTPBasic
 	{
 		return HTTPBasic(username, password);
 	}
 
+	/** Returns the username for these credentials. */
 	action getUser() returns string { return username; }
+	/** Returns the password for these credentials. */
 	action getPassword() returns string { return password; }
+	/** Returns an Authorization header for these credentials.
+	  (eg "Basic mXwvknIEinIne=").
+	*/
 	action getAuthHeader() returns string
 	{
 		return "Basic "+Base64.encode(username+":"+password);
 	}
+	/** Adds an Authorization header to the given request.
+	  @param req The request to add the header to.
+	*/
 	action addAuthHeader(Request req)
 	{
 		req.setHeader("Authorization", getAuthHeader());
 	}
+	/** @private */
 	string username;
+	/** @private */
 	string password;
 }
 
+/** @private */
 event User
 {
 	string name;
 	string password;
 }
 
+/** 
+  Event sent when an Authentication or CachedAuthentication object has finished initializing.
+*/
 event AuthenticationInitialized
 {
+	/** The ID returned from the corresponding initialize() call. */
 	integer id;
 }
 
+/** @private */
 event SessionCacheEntry
 {
+	/** @private */
 	import "AuthenticationPlugin" as plugin;
+	/** @private */
 	string token;
+	/** @private */
 	string user;
+	/** @private */
 	float created;
+	/** @private */
 	float lastSeen;
+	/** Create a SessionCacheEntry and generate a new token. */
 	static action create(string user) returns SessionCacheEntry
 	{
 		SessionCacheEntry entry := new SessionCacheEntry;
@@ -101,36 +153,55 @@ event SessionCacheEntry
 		entry.lastSeen := entry.created;
 		return entry;
 	}
-	action valid(float timeoutSecs, float maxSessionLength) returns boolean
+	/** Check the validity of a SessionCacheEntry, with the given timeout parameters. */
+	action valid(float timeoutSecs, float maxSessionLengthSecs) returns boolean
 	{
 		float now := TimeFormat.getSystemTime();
-		return created+maxSessionLength >= now and lastSeen+timeoutSecs >= now;
+		return created+maxSessionLengthSecs >= now and lastSeen+timeoutSecs >= now;
 	}
+	/** Update the last-seen timestamp on this cache entry. */
 	action update()
 	{
 		self.lastSeen := TimeFormat.getSystemTime();
 	}
 }
 
+/**
+  An event which holds a cache of user sessions and tokens.
+  Sessions have a timeout within which they must be refreshed to continue the session, and a maximum session length after which the session will expire even if refreshed.
+	@see SessionCache#create Session caches must be created with the create static action.
+	@see SessionCache#destroy Session caches must be destroyed with the destroy action before disposing of them.
+*/
 event SessionCache
 {
+	/** @private */
 	dictionary<string, SessionCacheEntry> cache;
+	/** @private */
 	float timeoutSecs;
-	float maxSessionLength;
+	/** @private */
+	float maxSessionLengthSecs;
+	/** @private */
+	listener gcListener;
 
-	static action create(integer timeoutSecs, integer maxSessionLength) returns SessionCache
+	/** Create a SesseionCache object.
+	  @param timeoutSecs Cache entries must be checked at least once every timeoutSecs or they will expire.
+	  @param maxSessionLengthSecs Cache entries will always expire after at most maxSessionLengthSecs.
+	  @returns A new SessionCache.
+	*/
+	static action create(integer timeoutSecs, integer maxSessionLengthSecs) returns SessionCache
 	{
 		SessionCache cache := new SessionCache;
 		cache.timeoutSecs := timeoutSecs.toFloat();
-		cache.maxSessionLength := maxSessionLength.toFloat();
+		cache.maxSessionLengthSecs := maxSessionLengthSecs.toFloat();
 
 		// garbage collect the token cache
-		on all wait(timeoutSecs) {
+		cache.gcListener := on all wait(cache.timeoutSecs) {
 			string token;
-			for token in cache.keys() {
-				if cache[token].lastSeen+timeoutSecs < now 
-				or cache[token].created+maxSessionLength < now {
-					cache.remove(token);
+			for token in cache.cache.keys() {
+				float now := TimeFormat.getSystemTime();
+				if cache.cache[token].lastSeen+cache.timeoutSecs < now 
+				or cache.cache[token].created+cache.maxSessionLengthSecs < now {
+					cache.cache.remove(token);
 				}
 			}
 		}
@@ -138,11 +209,24 @@ event SessionCache
 		return cache;
 	}
 
-	// takes a token, return user or ""
+	/**
+	  Stop the background garbage collection listener.
+	  Must be called before discarding the last reference to the SessionCache.
+	*/
+	action destroy()
+	{
+		gcListener.quit();
+	}
+
+	/** Check whether a token is a valid session.
+	  If valid, refreshes the timestamp on the cache entry.
+	  @param token The session token to check.
+	  @returns The user for the token if valid, "" if not.
+	*/
 	action check(string token) returns string
 	{
 		if cache.hasKey(token) {
-			if cache[token].valid(timeoutSecs, maxSessionLength) {
+			if cache[token].valid(timeoutSecs, maxSessionLengthSecs) {
 				cache[token].update();
 				return cache[token].user;
 			} else {
@@ -154,6 +238,12 @@ event SessionCache
 		}
 	}
 
+	/** Check whether an Authorization headers contains a valid token.
+	  If valid, refreshes the timestamp on the cache entry.
+	  @param token The value of the Authorization header to check.
+	  @returns The user for the token if valid, "" if not.
+	  @throws IllegalArgumentException if it is not a CacheToken header.
+	*/
 	action checkHeader(string header) returns string
 	{
 		if not 0 = header.find("CacheToken ") {
@@ -163,7 +253,11 @@ event SessionCache
 		return check(token);
 	}
 
-	// takes a user, returns a token
+	/** Add a new cache entry for a user and return the token.
+	  Should be called after authenticating the user via another means.
+	  @param user The user to add the entry for.
+	  @prama token The token the user should use for future authentication.
+	*/
 	action add(string user) returns string
 	{
 		SessionCacheEntry entry := SessionCacheEntry.create(user);
@@ -172,6 +266,9 @@ event SessionCache
 		return entry.token;
 	}
 
+	/** Remove all cache entries for a given user.
+	  @param user The user to expire cache entries for.
+	*/
 	action expireAll(string user)
 	{
 		string token;
@@ -182,10 +279,41 @@ event SessionCache
 		}
 	}
 }
+
+/** An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk.
+  @see Authentication#createFromStore Authentication objects must be created using one of the static create actions.
+  @see Authentication#createFromPath Authentication objects must be created using one of the static create actions.
+  @see Authentication#createInMemory Authentication objects must be created using one of the static create actions.
+  @see Authentication#initialize Authentication objects must be initialized after creation using the initialize action.
+*/
 event Authentication
 {
+	/** @private */
 	import "AuthenticationPlugin" as plugin;
 
+	/** @private */
+	constant integer INIT_FROM_STORE := 0;
+	/** @private */
+	constant integer INIT_FROM_PATH := 1;
+	/** @private */
+	constant integer INIT_IN_MEMORY := 2;
+
+	/** @private */
+	Storage storage;
+	/** @private */
+	string path;
+	/** @private */
+	integer initMode;
+	/** @private */
+	Store store;
+	/** @private */
+	Table users;
+
+	/** Create an Authentication database within an already created and prepared store in the application.
+	  @see Authentication#initialize The Authentication object must be initialized after creation.
+	  @param s A prepared and open Store object.
+	  @returns A new Authentication object.
+	*/
 	static action createFromStore(Store s) returns Authentication
 	{
 		Authentication a := new Authentication;
@@ -194,6 +322,11 @@ event Authentication
 		return a;
 	}
 
+	/** Create an Authentication database in the given path on disk.
+	  @see Authentication#initialize The Authentication object must be initialized after creation.
+	  @param s The path to the location of the database.
+	  @returns A new Authentication object.
+	*/
 	static action createFromPath(string path) returns Authentication
 	{
 		Authentication a := new Authentication;
@@ -202,6 +335,11 @@ event Authentication
 		return a;
 	}
 
+	/** Create an Authentication database purely in memory.
+	  The contents will not persist between runs of the correlator.
+	  @see Authentication#initialize The Authentication object must be initialized after creation.
+	  @returns A new Authentication object.
+	*/
 	static action createInMemory() returns Authentication
 	{
 		Authentication a := new Authentication;
@@ -209,6 +347,17 @@ event Authentication
 		return a;
 	}
 
+	/**
+	  Initialize the Authentication database. 
+	  The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like:
+<pre>
+on AuthenticationInitialized(auth.initialize()) {
+	// you can use auth here
+}
+</pre>
+		@returns An ID for the associated AuthenticationInitialized completion event.
+		@routes AuthenticationInitialized Routes an AuthenticationInitialized event when the asynchronous initialization completes.
+	*/
 	action initialize() returns integer
 	{
 		integer id := integer.incrementCounter("c.apx.auth.Authentication");
@@ -239,15 +388,12 @@ event Authentication
 		return id;
 	}
 
-	Storage storage;
-	string path;
-	integer initMode;
-	constant integer INIT_FROM_STORE := 0;
-	constant integer INIT_FROM_PATH := 1;
-	constant integer INIT_IN_MEMORY := 2;
-	Store store;
-	Table users;
-
+	/** Add a user to the authentication database.
+	  Replaces an existing user's password.
+	  The password is stored salted and hashed using MD5 crypt() password hashing.
+	  @param username The username of the new user.
+	  @param password The password of the new user.
+	*/
 	action addUser(string username, string password)
 	{
 		Row r := users.get(username);
@@ -257,6 +403,10 @@ event Authentication
 		log "Added user "+username at DEBUG;
 	}
 
+	/** Remove a user from the authentication database.
+	  Does nothing silently if the user does not exist.
+	  @param username The username of the user to remove.
+	*/
 	action removeUser(string username)
 	{
 		Row r := users.get(username);
@@ -266,18 +416,32 @@ event Authentication
 		log "Removed user "+username at DEBUG;
 	}
 
+	/** Returns true if the database has a user of a given name.
+	  @param username The name of the user to check.
+	  @returns True if the database has the user, false if not.
+	*/
 	action hasUser(string username) returns boolean
 	{
 		Row r := users.get(username);
 		return r.inTable();
 	}
 
+	/** Check a users password.
+	  @param username The username to check.
+	  @param password The password to check.
+	  @returns True if the user is in the database and the password matches, false otherwise.
+	*/
 	action checkUser(string username, string password) returns boolean
 	{
 		Row r := users.get(username);
 		return r.inTable() and r.getString("password") = plugin.hash(password, r.getString("password"));
 	}
 
+	/** Check an HTTP basic Authorization header against the database.
+	  @param authHeader The HTTP basic header value.
+	  @returns The corresponding username if the user exists and the password matches, "" otherwise.
+	  @throws IllegalArgumentException If the header is not a properly formed HTTP basic header.
+	*/
 	action checkHeader(string authHeader) returns string
 	{
 		HTTPBasic basic := HTTPBasic.createFromAuth(authHeader);
@@ -288,61 +452,149 @@ event Authentication
 		}
 	}
 
+	/** Check an HTTP basic Authorization header in an HTTP Request against the database.
+	  @param req The request object to check.
+	  @returns The corresponding username if the user exists and the password matches, "" otherwise.
+	  @throws IllegalArgumentException If the header is not a properly formed HTTP basic header.
+	*/
 	action checkRequest(Request req) returns string
 	{
 		return checkHeader(req.getHeader("Authorization"));
 	}
 }
 
+/**
+  The results of an auth check against a CachedAuthentication object.
+  @see CachedAuthentication#checkHeader This functions returns AuthResult objects.
+*/
 event AuthResult
 {
+	/** A result of a failed authentication. */
 	constant integer AUTH_FAILED := 0;
+	/** A result that authorization was not given, but is required. */
 	constant integer AUTH_REQUIRED := 1;
+	/** A result with an authorization token which has expired, password authentication should now be attempted. */
 	constant integer TOKEN_EXPIRED := 2;
+	/** A result that authentication has succeeded, but a potentially new token has been generated and should be stored and used. */
 	constant integer NEW_TOKEN := 3;
+	/** A result that authentication has succeeded. Also provides the token, but the expectation is that the client already has it. */
 	constant integer AUTH_SUCCEEDED := 4;
+	/** The result of this auth check.
+	  Should be one of AUTH_FAILED, AUTH_REQUIRED, TOKEN_EXPIRED, NEW_TOKEN or AUTH_SUCCEEDED.
+	  AUTH_SUCCEEDED and NEW_TOKEN are success results. 
+	  AUTH_REQUIRED and TOKEN_EXPIRED are temporary failure results. 
+	  AUTH_FAILED is a permanent failure result. 
+	*/
 	integer result;
+	/** The username that was authenticated (if successful). */
 	string user;
+	/** A currently valid token for this user (if successful). */
 	string tokenHeader;
 }
 
+/** An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk. Includes a session cache for authenticating with a session token instead.
+  @see CachedAuthentication#createFromStore CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#createFromPath CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#createInMemory CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#initialize CachedAuthentication objects must be initialized after creation using the initialize action.
+*/
 event CachedAuthentication
 {
+	/** @private */
 	Authentication auth;
+	/** @private */
 	SessionCache session;
-	static action createFromStore(Store s, integer timeoutSecs, integer maxSessionLength) returns CachedAuthentication
+
+	/** Create a CachedAuthentication database within an already created and prepared store in the application.
+	  @see CachedAuthentication#initialize The CachedAuthentication object must be initialized after creation.
+	  @param s A prepared and open Store object.
+	  @returns A new CachedAuthentication object.
+	*/
+	static action createFromStore(Store s, integer timeoutSecs, integer maxSessionLengthSecs) returns CachedAuthentication
 	{
-		return CachedAuthentication(Authentication.createFromStore(s), SessionCache.create(timeoutSecs, maxSessionLength));
+		return CachedAuthentication(Authentication.createFromStore(s), SessionCache.create(timeoutSecs, maxSessionLengthSecs));
 	}
-	static action createFromPath(string path, integer timeoutSecs, integer maxSessionLength) returns CachedAuthentication
+	/** Create an CachedAuthentication database in the given path on disk.
+	  @see CachedAuthentication#initialize The CachedAuthentication object must be initialized after creation.
+	  @param s The path to the location of the database.
+	  @returns A new CachedAuthentication object.
+	*/
+	static action createFromPath(string path, integer timeoutSecs, integer maxSessionLengthSecs) returns CachedAuthentication
 	{
-		return CachedAuthentication(Authentication.createFromPath(path), SessionCache.create(timeoutSecs, maxSessionLength));
+		return CachedAuthentication(Authentication.createFromPath(path), SessionCache.create(timeoutSecs, maxSessionLengthSecs));
 	}
-	static action createInMemory(integer timeoutSecs, integer maxSessionLength) returns CachedAuthentication
+	/** Create an CachedAuthentication database purely in memory.
+	  The contents will not persist between runs of the correlator.
+	  @see CachedAuthentication#initialize The CachedAuthentication object must be initialized after creation.
+	  @returns A new CachedAuthentication object.
+	*/
+	static action createInMemory(integer timeoutSecs, integer maxSessionLengthSecs) returns CachedAuthentication
 	{
-		return CachedAuthentication(Authentication.createInMemory(), SessionCache.create(timeoutSecs, maxSessionLength));
+		return CachedAuthentication(Authentication.createInMemory(), SessionCache.create(timeoutSecs, maxSessionLengthSecs));
 	}
+
+	/**
+	  Initialize the CachedAuthentication database. 
+	  The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like:
+<pre>
+on AuthenticationInitialized(auth.initialize()) {
+	// you can use auth here
+}
+</pre>
+		@returns An ID for the associated AuthenticationInitialized completion event.
+		@routes AuthenticationInitialized Routes an AuthenticationInitialized event when the asynchronous initialization completes.
+	*/
 	action initialize() returns integer
 	{
 		return auth.initialize();
 	}
+
+	/** Add a user to the authentication database.
+	  Replaces an existing user's password.
+	  The password is stored salted and hashed using MD5 crypt() password hashing.
+	  @param username The username of the new user.
+	  @param password The password of the new user.
+	*/
 	action addUser(string username, string password)
 	{
 		auth.addUser(username, password);
 	}
+
+	/** Remove a user from the authentication database.
+	  Does nothing silently if the user does not exist.
+	  @param username The username of the user to remove.
+	*/
 	action removeUser(string username)
 	{
 		auth.removeUser(username);
 		session.expireAll(username);
 	}
+
+	/** Returns true if the database has a user of a given name.
+	  @param username The name of the user to check.
+	  @returns True if the database has the user, false if not.
+	*/
 	action hasUser(string username) returns boolean
 	{
 		return auth.hasUser(username);
 	}
+
+	/** Check a users password.
+	  @param username The username to check.
+	  @param password The password to check.
+	  @returns True if the user is in the database and the password matches, false otherwise.
+	*/
 	action checkUser(string username, string password) returns boolean
 	{
 		return auth.checkUser(username, password);
 	}
+
+	/** Check an HTTP Authorization header.
+	  Will validate either an HTTP Basic auth header or a CacheToken session cache token.
+	  @param authHeader Either an HTTP Basic auth header or a CacheToken session cache token.
+	  @returns An AuthResult describing whether the header was validated, the user it corresponds to and a new authentication token to use
+	  @throws IllegalArgumentException If the header is not a properly formed HTTP basic header.
+	*/
 	action checkHeader(string authHeader) returns AuthResult
 	{
 		try {
@@ -370,6 +622,13 @@ event CachedAuthentication
 			return AuthResult(AuthResult.AUTH_FAILED, "", "");
 		}
 	}
+
+	/** Check the HTTP Authorization header in a Request.
+	  Will validate either an HTTP Basic auth header or a CacheToken session cache token.
+	  @param req The request object to check.
+	  @returns An AuthResult describing whether the header was validated, the user it corresponds to and a new authentication token to use
+	  @throws IllegalArgumentException If the header is not a properly formed HTTP basic header.
+	*/
 	action checkRequest(Request req) returns AuthResult
 	{
 		return checkHeader(req.getHeader("Authorization"));

@@ -48,6 +48,7 @@ public:
 		md.registerMethod<decltype(&AuthenticationPlugin::generateToken), &AuthenticationPlugin::generateToken>("generateToken");
 	}
 
+	/** Encode a string in base64 */
 	std::string base64encode(const char *input)
 	{
 		size_t inlen = strlen(input);
@@ -58,6 +59,7 @@ public:
 		return buf.get();
 	}
 
+	/** Decode a string from base64 */
 	std::string base64decode(const char *input)
 	{
 		size_t inlen = strlen(input);
@@ -68,12 +70,17 @@ public:
 		return buf.get();
 	}
 
+	/** Create a crypt()-style hash with the given salt.
+	  Can be used to compare password with hash:
+	  stored == hash(password, stored)
+	*/
 	std::string hash(const char *input, const char *salt)
 	{
 		struct crypt_data data;
 		data.initialized = 0;
 		const char * result;
 		if (std::string("") == salt) {
+			// If salt is not specified, generate a random salt, forcing MD5
 			char setting[11] = "$1$";
 			srand(time(0));
 			for (int i = 3; i < 11; ++i) {
@@ -87,15 +94,22 @@ public:
 		return result;
 	}
 
+	/** Generate a secure token using /dev/urandom on linux, and rand_s on windows. */
 	std::string generateToken()
 	{
 		char token[65];
+#ifdef _WIN32
+		for (int i = 0; i < 64; ++i) {
+			token[i] = alphanum[rand_s()%62];
+		}
+#else
 		char buf[64];
 		std::ifstream urandom("/dev/urandom");
 		urandom.read(buf, 64);
 		for (int i = 0; i < 64; ++i) {
 			token[i] = alphanum[buf[i]%62];
 		}
+#endif
 		token[64]='\0';
 		return token; 
 	}
