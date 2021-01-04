@@ -281,10 +281,10 @@ event SessionCache
 }
 
 /** An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk.
-  @see Authentication#createFromStore Authentication objects must be created using one of the static create actions.
-  @see Authentication#createFromPath Authentication objects must be created using one of the static create actions.
-  @see Authentication#createInMemory Authentication objects must be created using one of the static create actions.
-  @see Authentication#initialize Authentication objects must be initialized after creation using the initialize action.
+  @see Authentication#createFromStore() Authentication objects must be created using one of the static create actions.
+  @see Authentication#createFromPath() Authentication objects must be created using one of the static create actions.
+  @see Authentication#createInMemory() Authentication objects must be created using one of the static create actions.
+  @see Authentication#initialize() Authentication objects must be initialized after creation using the initialize action.
 */
 event Authentication
 {
@@ -491,14 +491,14 @@ event AuthResult
 	/** A currently valid token for this user (if successful). */
 	string tokenHeader;
 	/** Returns true if this result contains a success outcome. */
-	boolean success() { return result = AUTH_SUCCEEDED or result = NEW_TOKEN; }
+	action success() returns boolean { return result = AUTH_SUCCEEDED or result = NEW_TOKEN; }
 }
 
 /** An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk. Includes a session cache for authenticating with a session token instead.
-  @see CachedAuthentication#createFromStore CachedAuthentication objects must be created using one of the static create actions.
-  @see CachedAuthentication#createFromPath CachedAuthentication objects must be created using one of the static create actions.
-  @see CachedAuthentication#createInMemory CachedAuthentication objects must be created using one of the static create actions.
-  @see CachedAuthentication#initialize CachedAuthentication objects must be initialized after creation using the initialize action.
+  @see CachedAuthentication#createFromStore() CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#createFromPath() CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#createInMemory() CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#initialize() CachedAuthentication objects must be initialized after creation using the initialize action.
 */
 event CachedAuthentication
 {
