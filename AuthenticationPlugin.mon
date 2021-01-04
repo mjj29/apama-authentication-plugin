@@ -256,7 +256,7 @@ event SessionCache
 	/** Add a new cache entry for a user and return the token.
 	  Should be called after authenticating the user via another means.
 	  @param user The user to add the entry for.
-	  @prama token The token the user should use for future authentication.
+	  @param token The token the user should use for future authentication.
 	*/
 	action add(string user) returns string
 	{
