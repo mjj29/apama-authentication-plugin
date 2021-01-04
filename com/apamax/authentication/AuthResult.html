@@ -45,7 +45,12 @@
 <H2>
 <FONT SIZE="-1">com.apamax.authentication</FONT>
 <BR>Event AuthResult</H2>
-<HR>
+<HR>The results of an auth check against a CachedAuthentication object.<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>CachedAuthentication#checkHeader&nbsp;-&nbsp;This functions returns AuthResult objects.</DD>
+</DL>
 <HR>
 <A NAME="constant_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
@@ -55,27 +60,27 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#AUTH_FAILED">AUTH_FAILED</A> := 0</B></CODE>
 <br>
-</TD>
+<br>A result of a failed authentication.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#AUTH_REQUIRED">AUTH_REQUIRED</A> := 1</B></CODE>
 <br>
-</TD>
+<br>A result that authorization was not given, but is required.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#AUTH_SUCCEEDED">AUTH_SUCCEEDED</A> := 4</B></CODE>
 <br>
-</TD>
+<br>A result that authentication has succeeded. Also provides the token, but the expectation is that the client already has it.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#NEW_TOKEN">NEW_TOKEN</A> := 3</B></CODE>
 <br>
-</TD>
+<br>A result that authentication has succeeded, but a potentially new token has been generated and should be stored and used.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#TOKEN_EXPIRED">TOKEN_EXPIRED</A> := 2</B></CODE>
 <br>
-</TD>
+<br>A result with an authorization token which has expired, password authentication should now be attempted.</TD>
 </TR>
 </TABLE>&nbsp;<A NAME="member_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
@@ -85,17 +90,17 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;integer</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#result">result</A></B></CODE>
 <br>
-</TD>
+<br>The result of this auth check. Should be one of AUTH_FAILED, AUTH_REQUIRED, TOKEN_EXPIRED, NEW_TOKEN or AUTH_SUCCEEDED. AUTH_SUCCEEDED and NEW_TOKEN are success results. AUTH_REQUIRED and TOKEN_EXPIRED are temporary failure results. AUTH_FAILED is a permanent failure result.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#user">user</A></B></CODE>
 <br>
-</TD>
+<br>The username that was authenticated (if successful).</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE><B><A HREF="AuthResult.html#tokenHeader">tokenHeader</A></B></CODE>
 <br>
-</TD>
+<br>A currently valid token for this user (if successful).</TD>
 </TR>
 </TABLE>&nbsp;<A NAME="constant_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
@@ -106,28 +111,23 @@
 <A NAME="AUTH_FAILED"></A>
 <H3>AUTH_FAILED</H3>
 <PRE>constant integer&nbsp;<B>AUTH_FAILED := 0</B>
-</PRE>
-<HR>
+</PRE>A result of a failed authentication.<HR>
 <A NAME="AUTH_REQUIRED"></A>
 <H3>AUTH_REQUIRED</H3>
 <PRE>constant integer&nbsp;<B>AUTH_REQUIRED := 1</B>
-</PRE>
-<HR>
+</PRE>A result that authorization was not given, but is required.<HR>
 <A NAME="AUTH_SUCCEEDED"></A>
 <H3>AUTH_SUCCEEDED</H3>
 <PRE>constant integer&nbsp;<B>AUTH_SUCCEEDED := 4</B>
-</PRE>
-<HR>
+</PRE>A result that authentication has succeeded. Also provides the token, but the expectation is that the client already has it.<HR>
 <A NAME="NEW_TOKEN"></A>
 <H3>NEW_TOKEN</H3>
 <PRE>constant integer&nbsp;<B>NEW_TOKEN := 3</B>
-</PRE>
-<HR>
+</PRE>A result that authentication has succeeded, but a potentially new token has been generated and should be stored and used.<HR>
 <A NAME="TOKEN_EXPIRED"></A>
 <H3>TOKEN_EXPIRED</H3>
 <PRE>constant integer&nbsp;<B>TOKEN_EXPIRED := 2</B>
-</PRE>
-<HR>
+</PRE>A result with an authorization token which has expired, password authentication should now be attempted.<HR>
 <A NAME="member_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -137,18 +137,15 @@
 <A NAME="result"></A>
 <H3>result</H3>
 <PRE>integer&nbsp;<B>result</B>
-</PRE>
-<HR>
+</PRE>The result of this auth check. Should be one of AUTH_FAILED, AUTH_REQUIRED, TOKEN_EXPIRED, NEW_TOKEN or AUTH_SUCCEEDED. AUTH_SUCCEEDED and NEW_TOKEN are success results. AUTH_REQUIRED and TOKEN_EXPIRED are temporary failure results. AUTH_FAILED is a permanent failure result.<HR>
 <A NAME="tokenHeader"></A>
 <H3>tokenHeader</H3>
 <PRE>string&nbsp;<B>tokenHeader</B>
-</PRE>
-<HR>
+</PRE>A currently valid token for this user (if successful).<HR>
 <A NAME="user"></A>
 <H3>user</H3>
 <PRE>string&nbsp;<B>user</B>
-</PRE>
-<HR>
+</PRE>The username that was authenticated (if successful).<HR>
 <HR>
 <TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
 <TR>

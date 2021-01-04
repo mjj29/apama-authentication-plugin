@@ -38,14 +38,22 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;<A HREF="#constant_summary">CONSTANT</A>&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;<A HREF="#constant_detail">CONSTANT</A>&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>
 <H2>
 <FONT SIZE="-1">com.apamax.authentication</FONT>
 <BR>Event Authentication</H2>
-<HR>
+<HR>An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk.<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>Authentication#createFromStore&nbsp;-&nbsp;Authentication objects must be created using one of the static create actions.</DD>
+<DD>Authentication#createFromPath&nbsp;-&nbsp;Authentication objects must be created using one of the static create actions.</DD>
+<DD>Authentication#createInMemory&nbsp;-&nbsp;Authentication objects must be created using one of the static create actions.</DD>
+<DD>Authentication#initialize&nbsp;-&nbsp;Authentication objects must be initialized after creation using the initialize action.</DD>
+</DL>
 <DL>
 <DT>
 <B>Routes:</B>
@@ -54,67 +62,7 @@
 <A HREF="../../../com/apamax/authentication/AuthenticationInitialized.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthenticationInitialized</A>&nbsp;-&nbsp;</DD>
 </DL>
 <HR>
-<A NAME="import_summary"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Import summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;AuthenticationPlugin</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#plugin">plugin</A></B></CODE>
-<br>
-</TD>
-</TR>
-</TABLE>&nbsp;<A NAME="constant_summary"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Constant summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#INIT_FROM_PATH">INIT_FROM_PATH</A> := 1</B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#INIT_FROM_STORE">INIT_FROM_STORE</A> := 0</B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;constant integer</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#INIT_IN_MEMORY">INIT_IN_MEMORY</A> := 2</B></CODE>
-<br>
-</TD>
-</TR>
-</TABLE>&nbsp;<A NAME="member_summary"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Member summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;com.apama.memorystore.Storage</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#storage">storage</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#path">path</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;integer</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#initMode">initMode</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;com.apama.memorystore.Store</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#store">store</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;com.apama.memorystore.Table</CODE></FONT></TD><TD><CODE><B><A HREF="Authentication.html#users">users</A></B></CODE>
-<br>
-</TD>
-</TR>
-</TABLE>&nbsp;<A NAME="action_summary"></A>
+<A NAME="action_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Action summary</B></FONT></TH>
@@ -122,117 +70,54 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#addUser()">addUser</A></B>(string&nbsp;username,&nbsp;string&nbsp;password)</CODE>
 <br>
-</TD>
+<br>Add a user to the authentication database. Replaces an existing user's password. The password is stored salted and hashed using MD5 crypt() password hashing.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#checkHeader()">checkHeader</A></B>(string&nbsp;authHeader)</CODE>
 <br>
-</TD>
+<br>Check an HTTP basic Authorization header against the database.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#checkRequest()">checkRequest</A></B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</CODE>
 <br>
-</TD>
+<br>Check an HTTP basic Authorization header in an HTTP Request against the database.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;boolean</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#checkUser()">checkUser</A></B>(string&nbsp;username,&nbsp;string&nbsp;password)</CODE>
 <br>
-</TD>
+<br>Check a users password.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="Authentication.html#createFromPath()">createFromPath</A></B>(string&nbsp;path)</CODE>
 <br>
-</TD>
+<br>Create an Authentication database in the given path on disk.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="Authentication.html#createFromStore()">createFromStore</A></B>(com.apama.memorystore.Store&nbsp;s)</CODE>
 <br>
-</TD>
+<br>Create an Authentication database within an already created and prepared store in the application.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="Authentication.html#createInMemory()">createInMemory</A></B>()</CODE>
 <br>
-</TD>
+<br>Create an Authentication database purely in memory. The contents will not persist between runs of the correlator.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;boolean</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#hasUser()">hasUser</A></B>(string&nbsp;username)</CODE>
 <br>
-</TD>
+<br>Returns true if the database has a user of a given name.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;integer</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#initialize()">initialize</A></B>()</CODE>
 <br>
-</TD>
+<br>Initialize the Authentication database. The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like: <pre> on AuthenticationInitialized(auth.initialize()) { // you can use auth here } </pre></TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#removeUser()">removeUser</A></B>(string&nbsp;username)</CODE>
 <br>
-</TD>
+<br>Remove a user from the authentication database. Does nothing silently if the user does not exist.</TD>
 </TR>
-</TABLE>&nbsp;<A NAME="import_detail"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Import detail</B></FONT></TH>
-</TR>
-</TABLE>
-<A NAME="plugin"></A>
-<H3>plugin</H3>
-<PRE>AuthenticationPlugin&nbsp;<B>plugin</B>
-</PRE>
-<HR>
-<A NAME="constant_detail"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Constant detail</B></FONT></TH>
-</TR>
-</TABLE>
-<A NAME="INIT_FROM_PATH"></A>
-<H3>INIT_FROM_PATH</H3>
-<PRE>constant integer&nbsp;<B>INIT_FROM_PATH := 1</B>
-</PRE>
-<HR>
-<A NAME="INIT_FROM_STORE"></A>
-<H3>INIT_FROM_STORE</H3>
-<PRE>constant integer&nbsp;<B>INIT_FROM_STORE := 0</B>
-</PRE>
-<HR>
-<A NAME="INIT_IN_MEMORY"></A>
-<H3>INIT_IN_MEMORY</H3>
-<PRE>constant integer&nbsp;<B>INIT_IN_MEMORY := 2</B>
-</PRE>
-<HR>
-<A NAME="member_detail"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Member detail</B></FONT></TH>
-</TR>
-</TABLE>
-<A NAME="initMode"></A>
-<H3>initMode</H3>
-<PRE>integer&nbsp;<B>initMode</B>
-</PRE>
-<HR>
-<A NAME="path"></A>
-<H3>path</H3>
-<PRE>string&nbsp;<B>path</B>
-</PRE>
-<HR>
-<A NAME="storage"></A>
-<H3>storage</H3>
-<PRE>com.apama.memorystore.Storage&nbsp;<B>storage</B>
-</PRE>
-<HR>
-<A NAME="store"></A>
-<H3>store</H3>
-<PRE>com.apama.memorystore.Store&nbsp;<B>store</B>
-</PRE>
-<HR>
-<A NAME="users"></A>
-<H3>users</H3>
-<PRE>com.apama.memorystore.Table&nbsp;<B>users</B>
-</PRE>
-<HR>
-<A NAME="action_detail"></A>
+</TABLE>&nbsp;<A NAME="action_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Action detail</B></FONT></TH>
@@ -240,63 +125,82 @@
 </TABLE>
 <A NAME="addUser()"></A>
 <H3>addUser</H3>
-<PRE>void&nbsp;<B>addUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>
-<DL>
+<PRE>void&nbsp;<B>addUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>Add a user to the authentication database. Replaces an existing user's password. The password is stored salted and hashed using MD5 crypt() password hashing.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The username of the new user.</DD>
 <DD>
-<tt>password</tt>
-</DD>
+<tt>password</tt>&nbsp;-&nbsp;The password of the new user.</DD>
 </DL>
 <HR>
 <A NAME="checkHeader()"></A>
 <H3>checkHeader</H3>
-<PRE>string&nbsp;<B>checkHeader</B>(string&nbsp;authHeader)</PRE>
-<DL>
+<PRE>string&nbsp;<B>checkHeader</B>(string&nbsp;authHeader)</PRE>Check an HTTP basic Authorization header against the database.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>authHeader</tt>
-</DD>
+<tt>authHeader</tt>&nbsp;-&nbsp;The HTTP basic header value.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>The corresponding username if the user exists and the password matches, "" otherwise.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException If the header is not a properly formed HTTP basic header.</DD>
 </DL>
 <HR>
 <A NAME="checkRequest()"></A>
 <H3>checkRequest</H3>
-<PRE>string&nbsp;<B>checkRequest</B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</PRE>
-<DL>
+<PRE>string&nbsp;<B>checkRequest</B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</PRE>Check an HTTP basic Authorization header in an HTTP Request against the database.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>req</tt>
-</DD>
+<tt>req</tt>&nbsp;-&nbsp;The request object to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>The corresponding username if the user exists and the password matches, "" otherwise.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException If the header is not a properly formed HTTP basic header.</DD>
 </DL>
 <HR>
 <A NAME="checkUser()"></A>
 <H3>checkUser</H3>
-<PRE>boolean&nbsp;<B>checkUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>
-<DL>
+<PRE>boolean&nbsp;<B>checkUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>Check a users password.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The username to check.</DD>
 <DD>
-<tt>password</tt>
-</DD>
+<tt>password</tt>&nbsp;-&nbsp;The password to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>True if the user is in the database and the password matches, false otherwise.</DD>
 </DL>
 <HR>
 <A NAME="createFromPath()"></A>
 <H3>createFromPath</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A>&nbsp;static <B>createFromPath</B>(string&nbsp;path)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A>&nbsp;static <B>createFromPath</B>(string&nbsp;path)</PRE>Create an Authentication database in the given path on disk.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
@@ -304,58 +208,98 @@
 <tt>path</tt>
 </DD>
 </DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new Authentication object.</DD>
+</DL>
+<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>Authentication#initialize&nbsp;-&nbsp;The Authentication object must be initialized after creation.</DD>
+</DL>
 <HR>
 <A NAME="createFromStore()"></A>
 <H3>createFromStore</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A>&nbsp;static <B>createFromStore</B>(com.apama.memorystore.Store&nbsp;s)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A>&nbsp;static <B>createFromStore</B>(com.apama.memorystore.Store&nbsp;s)</PRE>Create an Authentication database within an already created and prepared store in the application.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>s</tt>
-</DD>
+<tt>s</tt>&nbsp;-&nbsp;A prepared and open Store object.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new Authentication object.</DD>
+</DL>
+<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>Authentication#initialize&nbsp;-&nbsp;The Authentication object must be initialized after creation.</DD>
 </DL>
 <HR>
 <A NAME="createInMemory()"></A>
 <H3>createInMemory</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A>&nbsp;static <B>createInMemory</B>()</PRE>
+<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A>&nbsp;static <B>createInMemory</B>()</PRE>Create an Authentication database purely in memory. The contents will not persist between runs of the correlator.<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new Authentication object.</DD>
+</DL>
+<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>Authentication#initialize&nbsp;-&nbsp;The Authentication object must be initialized after creation.</DD>
+</DL>
 <HR>
 <A NAME="hasUser()"></A>
 <H3>hasUser</H3>
-<PRE>boolean&nbsp;<B>hasUser</B>(string&nbsp;username)</PRE>
-<DL>
+<PRE>boolean&nbsp;<B>hasUser</B>(string&nbsp;username)</PRE>Returns true if the database has a user of a given name.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The name of the user to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>True if the database has the user, false if not.</DD>
 </DL>
 <HR>
 <A NAME="initialize()"></A>
 <H3>initialize</H3>
-<PRE>integer&nbsp;<B>initialize</B>()</PRE>
+<PRE>integer&nbsp;<B>initialize</B>()</PRE>Initialize the Authentication database. The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like: <pre> on AuthenticationInitialized(auth.initialize()) { // you can use auth here } </pre><DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>An ID for the associated AuthenticationInitialized completion event.</DD>
+</DL>
 <DL>
 <DT>
 <B>Routes:</B>
 </DT>
 <DD>
-<A HREF="../../../com/apamax/authentication/AuthenticationInitialized.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthenticationInitialized</A>&nbsp;-&nbsp;</DD>
+<A HREF="../../../com/apamax/authentication/AuthenticationInitialized.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthenticationInitialized</A>&nbsp;-&nbsp;Routes an AuthenticationInitialized event when the asynchronous initialization completes.</DD>
 </DL>
 <HR>
 <A NAME="removeUser()"></A>
 <H3>removeUser</H3>
-<PRE>void&nbsp;<B>removeUser</B>(string&nbsp;username)</PRE>
-<DL>
+<PRE>void&nbsp;<B>removeUser</B>(string&nbsp;username)</PRE>Remove a user from the authentication database. Does nothing silently if the user does not exist.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The username of the user to remove.</DD>
 </DL>
 <HR>
 <HR>
@@ -383,7 +327,7 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;<A HREF="#constant_summary">CONSTANT</A>&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;<A HREF="#constant_detail">CONSTANT</A>&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>

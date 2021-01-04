@@ -38,15 +38,14 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>
 <H2>
 <FONT SIZE="-1">com.apamax.authentication</FONT>
 <BR>Event HTTPBasic</H2>
-<HR>
-<HR>
+<HR>Read and create HTTP basic headers.<HR>
 <A NAME="import_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -55,22 +54,7 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;AuthenticationPlugin</CODE></FONT></TD><TD><CODE><B><A HREF="HTTPBasic.html#plugin">plugin</A></B></CODE>
 <br>
-</TD>
-</TR>
-</TABLE>&nbsp;<A NAME="member_summary"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Member summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE><B><A HREF="HTTPBasic.html#username">username</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE><B><A HREF="HTTPBasic.html#password">password</A></B></CODE>
-<br>
-</TD>
+<br>private</TD>
 </TR>
 </TABLE>&nbsp;<A NAME="action_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
@@ -80,32 +64,32 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="HTTPBasic.html#addAuthHeader()">addAuthHeader</A></B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</CODE>
 <br>
-</TD>
+<br>Adds an Authorization header to the given request.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/HTTPBasic.html" title="type in com.apamax.authentication">com.apamax.authentication.HTTPBasic</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="HTTPBasic.html#createFromAuth()">createFromAuth</A></B>(string&nbsp;auth)</CODE>
 <br>
-</TD>
+<br>Create an HTTPBasic object from an Authorization header.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/HTTPBasic.html" title="type in com.apamax.authentication">com.apamax.authentication.HTTPBasic</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="HTTPBasic.html#createFromCreds()">createFromCreds</A></B>(string&nbsp;username,&nbsp;string&nbsp;password)</CODE>
 <br>
-</TD>
+<br>Create an HTTPBasic object from a username and password.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="HTTPBasic.html#getAuthHeader()">getAuthHeader</A></B>()</CODE>
 <br>
-</TD>
+<br>Returns an Authorization header for these credentials. (eg "Basic mXwvknIEinIne=").</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="HTTPBasic.html#getPassword()">getPassword</A></B>()</CODE>
 <br>
-</TD>
+<br>Returns the password for these credentials.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="HTTPBasic.html#getUser()">getUser</A></B>()</CODE>
 <br>
-</TD>
+<br>Returns the username for these credentials.</TD>
 </TR>
 </TABLE>&nbsp;<A NAME="import_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
@@ -116,24 +100,7 @@
 <A NAME="plugin"></A>
 <H3>plugin</H3>
 <PRE>AuthenticationPlugin&nbsp;<B>plugin</B>
-</PRE>
-<HR>
-<A NAME="member_detail"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Member detail</B></FONT></TH>
-</TR>
-</TABLE>
-<A NAME="password"></A>
-<H3>password</H3>
-<PRE>string&nbsp;<B>password</B>
-</PRE>
-<HR>
-<A NAME="username"></A>
-<H3>username</H3>
-<PRE>string&nbsp;<B>username</B>
-</PRE>
-<HR>
+</PRE>private<HR>
 <A NAME="action_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -142,34 +109,41 @@
 </TABLE>
 <A NAME="addAuthHeader()"></A>
 <H3>addAuthHeader</H3>
-<PRE>void&nbsp;<B>addAuthHeader</B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</PRE>
-<DL>
+<PRE>void&nbsp;<B>addAuthHeader</B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</PRE>Adds an Authorization header to the given request.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>req</tt>
-</DD>
+<tt>req</tt>&nbsp;-&nbsp;The request to add the header to.</DD>
 </DL>
 <HR>
 <A NAME="createFromAuth()"></A>
 <H3>createFromAuth</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/HTTPBasic.html" title="type in com.apamax.authentication">com.apamax.authentication.HTTPBasic</A>&nbsp;static <B>createFromAuth</B>(string&nbsp;auth)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/HTTPBasic.html" title="type in com.apamax.authentication">com.apamax.authentication.HTTPBasic</A>&nbsp;static <B>createFromAuth</B>(string&nbsp;auth)</PRE>Create an HTTPBasic object from an Authorization header.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>auth</tt>
-</DD>
+<tt>auth</tt>&nbsp;-&nbsp;A correctly formatted Authorization header (eg "Basic mXwvknIEinIne=").</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new HTTPBasic object representing the encapsulated authentication data.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException if auth is not a properly formatted header.</DD>
 </DL>
 <HR>
 <A NAME="createFromCreds()"></A>
 <H3>createFromCreds</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/HTTPBasic.html" title="type in com.apamax.authentication">com.apamax.authentication.HTTPBasic</A>&nbsp;static <B>createFromCreds</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/HTTPBasic.html" title="type in com.apamax.authentication">com.apamax.authentication.HTTPBasic</A>&nbsp;static <B>createFromCreds</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>Create an HTTPBasic object from a username and password.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
@@ -180,19 +154,22 @@
 <tt>password</tt>
 </DD>
 </DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new HTTPBasic object representing the given authentication data.</DD>
+</DL>
 <HR>
 <A NAME="getAuthHeader()"></A>
 <H3>getAuthHeader</H3>
-<PRE>string&nbsp;<B>getAuthHeader</B>()</PRE>
-<HR>
+<PRE>string&nbsp;<B>getAuthHeader</B>()</PRE>Returns an Authorization header for these credentials. (eg "Basic mXwvknIEinIne=").<HR>
 <A NAME="getPassword()"></A>
 <H3>getPassword</H3>
-<PRE>string&nbsp;<B>getPassword</B>()</PRE>
-<HR>
+<PRE>string&nbsp;<B>getPassword</B>()</PRE>Returns the password for these credentials.<HR>
 <A NAME="getUser()"></A>
 <H3>getUser</H3>
-<PRE>string&nbsp;<B>getUser</B>()</PRE>
-<HR>
+<PRE>string&nbsp;<B>getUser</B>()</PRE>Returns the username for these credentials.<HR>
 <HR>
 <TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0" SUMMARY="">
 <TR>
@@ -218,7 +195,7 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>

@@ -38,31 +38,24 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>
 <H2>
 <FONT SIZE="-1">com.apamax.authentication</FONT>
 <BR>Event CachedAuthentication</H2>
+<HR>An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk. Includes a session cache for authenticating with a session token instead.<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>CachedAuthentication#createFromStore&nbsp;-&nbsp;CachedAuthentication objects must be created using one of the static create actions.</DD>
+<DD>CachedAuthentication#createFromPath&nbsp;-&nbsp;CachedAuthentication objects must be created using one of the static create actions.</DD>
+<DD>CachedAuthentication#createInMemory&nbsp;-&nbsp;CachedAuthentication objects must be created using one of the static create actions.</DD>
+<DD>CachedAuthentication#initialize&nbsp;-&nbsp;CachedAuthentication objects must be initialized after creation using the initialize action.</DD>
+</DL>
 <HR>
-<HR>
-<A NAME="member_summary"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Member summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A></CODE></FONT></TD><TD><CODE><B><A HREF="CachedAuthentication.html#auth">auth</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/SessionCache.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCache</A></CODE></FONT></TD><TD><CODE><B><A HREF="CachedAuthentication.html#session">session</A></B></CODE>
-<br>
-</TD>
-</TR>
-</TABLE>&nbsp;<A NAME="action_summary"></A>
+<A NAME="action_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Action summary</B></FONT></TH>
@@ -70,72 +63,54 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="CachedAuthentication.html#addUser()">addUser</A></B>(string&nbsp;username,&nbsp;string&nbsp;password)</CODE>
 <br>
-</TD>
+<br>Add a user to the authentication database. Replaces an existing user's password. The password is stored salted and hashed using MD5 crypt() password hashing.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/AuthResult.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthResult</A></CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="CachedAuthentication.html#checkHeader()">checkHeader</A></B>(string&nbsp;authHeader)</CODE>
 <br>
-</TD>
+<br>Check an HTTP Authorization header. Will validate either an HTTP Basic auth header or a CacheToken session cache token.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/AuthResult.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthResult</A></CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="CachedAuthentication.html#checkRequest()">checkRequest</A></B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</CODE>
 <br>
-</TD>
+<br>Check the HTTP Authorization header in a Request. Will validate either an HTTP Basic auth header or a CacheToken session cache token.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;boolean</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="CachedAuthentication.html#checkUser()">checkUser</A></B>(string&nbsp;username,&nbsp;string&nbsp;password)</CODE>
 <br>
-</TD>
+<br>Check a users password.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="CachedAuthentication.html#createFromPath()">createFromPath</A></B>(string&nbsp;path,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="CachedAuthentication.html#createFromPath()">createFromPath</A></B>(string&nbsp;path,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</CODE>
 <br>
-</TD>
+<br>Create an CachedAuthentication database in the given path on disk.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="CachedAuthentication.html#createFromStore()">createFromStore</A></B>(com.apama.memorystore.Store&nbsp;s,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="CachedAuthentication.html#createFromStore()">createFromStore</A></B>(com.apama.memorystore.Store&nbsp;s,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</CODE>
 <br>
-</TD>
+<br>Create a CachedAuthentication database within an already created and prepared store in the application.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="CachedAuthentication.html#createInMemory()">createInMemory</A></B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="CachedAuthentication.html#createInMemory()">createInMemory</A></B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</CODE>
 <br>
-</TD>
+<br>Create an CachedAuthentication database purely in memory. The contents will not persist between runs of the correlator.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;boolean</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="CachedAuthentication.html#hasUser()">hasUser</A></B>(string&nbsp;username)</CODE>
 <br>
-</TD>
+<br>Returns true if the database has a user of a given name.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;integer</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="CachedAuthentication.html#initialize()">initialize</A></B>()</CODE>
 <br>
-</TD>
+<br>Initialize the CachedAuthentication database. The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like: <pre> on AuthenticationInitialized(auth.initialize()) { // you can use auth here } </pre></TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="CachedAuthentication.html#removeUser()">removeUser</A></B>(string&nbsp;username)</CODE>
 <br>
-</TD>
+<br>Remove a user from the authentication database. Does nothing silently if the user does not exist.</TD>
 </TR>
-</TABLE>&nbsp;<A NAME="member_detail"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Member detail</B></FONT></TH>
-</TR>
-</TABLE>
-<A NAME="auth"></A>
-<H3>auth</H3>
-<PRE>
-<A HREF="../../../com/apamax/authentication/Authentication.html" title="type in com.apamax.authentication">com.apamax.authentication.Authentication</A>&nbsp;<B>auth</B>
-</PRE>
-<HR>
-<A NAME="session"></A>
-<H3>session</H3>
-<PRE>
-<A HREF="../../../com/apamax/authentication/SessionCache.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCache</A>&nbsp;<B>session</B>
-</PRE>
-<HR>
-<A NAME="action_detail"></A>
+</TABLE>&nbsp;<A NAME="action_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Action detail</B></FONT></TH>
@@ -143,65 +118,84 @@
 </TABLE>
 <A NAME="addUser()"></A>
 <H3>addUser</H3>
-<PRE>void&nbsp;<B>addUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>
-<DL>
+<PRE>void&nbsp;<B>addUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>Add a user to the authentication database. Replaces an existing user's password. The password is stored salted and hashed using MD5 crypt() password hashing.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The username of the new user.</DD>
 <DD>
-<tt>password</tt>
-</DD>
+<tt>password</tt>&nbsp;-&nbsp;The password of the new user.</DD>
 </DL>
 <HR>
 <A NAME="checkHeader()"></A>
 <H3>checkHeader</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/AuthResult.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthResult</A>&nbsp;<B>checkHeader</B>(string&nbsp;authHeader)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/AuthResult.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthResult</A>&nbsp;<B>checkHeader</B>(string&nbsp;authHeader)</PRE>Check an HTTP Authorization header. Will validate either an HTTP Basic auth header or a CacheToken session cache token.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>authHeader</tt>
-</DD>
+<tt>authHeader</tt>&nbsp;-&nbsp;Either an HTTP Basic auth header or a CacheToken session cache token.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>An AuthResult describing whether the header was validated, the user it corresponds to and a new authentication token to use</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException If the header is not a properly formed HTTP basic header.</DD>
 </DL>
 <HR>
 <A NAME="checkRequest()"></A>
 <H3>checkRequest</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/AuthResult.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthResult</A>&nbsp;<B>checkRequest</B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/AuthResult.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthResult</A>&nbsp;<B>checkRequest</B>(com.softwareag.connectivity.httpclient.Request&nbsp;req)</PRE>Check the HTTP Authorization header in a Request. Will validate either an HTTP Basic auth header or a CacheToken session cache token.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>req</tt>
-</DD>
+<tt>req</tt>&nbsp;-&nbsp;The request object to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>An AuthResult describing whether the header was validated, the user it corresponds to and a new authentication token to use</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException If the header is not a properly formed HTTP basic header.</DD>
 </DL>
 <HR>
 <A NAME="checkUser()"></A>
 <H3>checkUser</H3>
-<PRE>boolean&nbsp;<B>checkUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>
-<DL>
+<PRE>boolean&nbsp;<B>checkUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>Check a users password.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The username to check.</DD>
 <DD>
-<tt>password</tt>
-</DD>
+<tt>password</tt>&nbsp;-&nbsp;The password to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>True if the user is in the database and the password matches, false otherwise.</DD>
 </DL>
 <HR>
 <A NAME="createFromPath()"></A>
 <H3>createFromPath</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A>&nbsp;static <B>createFromPath</B>(string&nbsp;path,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A>&nbsp;static <B>createFromPath</B>(string&nbsp;path,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</PRE>Create an CachedAuthentication database in the given path on disk.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
@@ -212,34 +206,55 @@
 <tt>timeoutSecs</tt>
 </DD>
 <DD>
-<tt>maxSessionLength</tt>
+<tt>maxSessionLengthSecs</tt>
 </DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new CachedAuthentication object.</DD>
+</DL>
+<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>CachedAuthentication#initialize&nbsp;-&nbsp;The CachedAuthentication object must be initialized after creation.</DD>
 </DL>
 <HR>
 <A NAME="createFromStore()"></A>
 <H3>createFromStore</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A>&nbsp;static <B>createFromStore</B>(com.apama.memorystore.Store&nbsp;s,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A>&nbsp;static <B>createFromStore</B>(com.apama.memorystore.Store&nbsp;s,&nbsp;integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</PRE>Create a CachedAuthentication database within an already created and prepared store in the application.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>s</tt>
-</DD>
+<tt>s</tt>&nbsp;-&nbsp;A prepared and open Store object.</DD>
 <DD>
 <tt>timeoutSecs</tt>
 </DD>
 <DD>
-<tt>maxSessionLength</tt>
+<tt>maxSessionLengthSecs</tt>
 </DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new CachedAuthentication object.</DD>
+</DL>
+<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>CachedAuthentication#initialize&nbsp;-&nbsp;The CachedAuthentication object must be initialized after creation.</DD>
 </DL>
 <HR>
 <A NAME="createInMemory()"></A>
 <H3>createInMemory</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A>&nbsp;static <B>createInMemory</B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/CachedAuthentication.html" title="type in com.apamax.authentication">com.apamax.authentication.CachedAuthentication</A>&nbsp;static <B>createInMemory</B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</PRE>Create an CachedAuthentication database purely in memory. The contents will not persist between runs of the correlator.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
@@ -247,36 +262,55 @@
 <tt>timeoutSecs</tt>
 </DD>
 <DD>
-<tt>maxSessionLength</tt>
+<tt>maxSessionLengthSecs</tt>
 </DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new CachedAuthentication object.</DD>
+</DL>
+<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>CachedAuthentication#initialize&nbsp;-&nbsp;The CachedAuthentication object must be initialized after creation.</DD>
 </DL>
 <HR>
 <A NAME="hasUser()"></A>
 <H3>hasUser</H3>
-<PRE>boolean&nbsp;<B>hasUser</B>(string&nbsp;username)</PRE>
-<DL>
+<PRE>boolean&nbsp;<B>hasUser</B>(string&nbsp;username)</PRE>Returns true if the database has a user of a given name.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The name of the user to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>True if the database has the user, false if not.</DD>
 </DL>
 <HR>
 <A NAME="initialize()"></A>
 <H3>initialize</H3>
-<PRE>integer&nbsp;<B>initialize</B>()</PRE>
+<PRE>integer&nbsp;<B>initialize</B>()</PRE>Initialize the CachedAuthentication database. The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like: <pre> on AuthenticationInitialized(auth.initialize()) { // you can use auth here } </pre><DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>An ID for the associated AuthenticationInitialized completion event.</DD>
+</DL>
 <HR>
 <A NAME="removeUser()"></A>
 <H3>removeUser</H3>
-<PRE>void&nbsp;<B>removeUser</B>(string&nbsp;username)</PRE>
-<DL>
+<PRE>void&nbsp;<B>removeUser</B>(string&nbsp;username)</PRE>Remove a user from the authentication database. Does nothing silently if the user does not exist.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>username</tt>
-</DD>
+<tt>username</tt>&nbsp;-&nbsp;The username of the user to remove.</DD>
 </DL>
 <HR>
 <HR>
@@ -304,7 +338,7 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>

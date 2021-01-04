@@ -38,26 +38,15 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>
 <H2>
 <FONT SIZE="-1">com.apamax.authentication</FONT>
 <BR>Event Base64</H2>
-<HR>
-<HR>
-<A NAME="import_summary"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Import summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;AuthenticationPlugin</CODE></FONT></TD><TD><CODE><B><A HREF="Base64.html#plugin">plugin</A></B></CODE>
-<br>
-</TD>
-</TR>
-</TABLE>&nbsp;<A NAME="action_summary"></A>
+<HR>Encoding and decoding support for base-64. Converts between a UTF-8 string and a base-64-encoded string.<HR>
+<A NAME="action_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Action summary</B></FONT></TH>
@@ -65,25 +54,14 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="Base64.html#decode()">decode</A></B>(string&nbsp;s)</CODE>
 <br>
-</TD>
+<br>Decode a string from base-64.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="Base64.html#encode()">encode</A></B>(string&nbsp;s)</CODE>
 <br>
-</TD>
+<br>Encode a string in base-64.</TD>
 </TR>
-</TABLE>&nbsp;<A NAME="import_detail"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Import detail</B></FONT></TH>
-</TR>
-</TABLE>
-<A NAME="plugin"></A>
-<H3>plugin</H3>
-<PRE>AuthenticationPlugin&nbsp;<B>plugin</B>
-</PRE>
-<HR>
-<A NAME="action_detail"></A>
+</TABLE>&nbsp;<A NAME="action_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Action detail</B></FONT></TH>
@@ -91,26 +69,46 @@
 </TABLE>
 <A NAME="decode()"></A>
 <H3>decode</H3>
-<PRE>string&nbsp;static <B>decode</B>(string&nbsp;s)</PRE>
-<DL>
+<PRE>string&nbsp;static <B>decode</B>(string&nbsp;s)</PRE>Decode a string from base-64.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>s</tt>
-</DD>
+<tt>s</tt>&nbsp;-&nbsp;A base-64 encoded string.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>The decoded string.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>PluginException if the decoding failed.</DD>
 </DL>
 <HR>
 <A NAME="encode()"></A>
 <H3>encode</H3>
-<PRE>string&nbsp;static <B>encode</B>(string&nbsp;s)</PRE>
-<DL>
+<PRE>string&nbsp;static <B>encode</B>(string&nbsp;s)</PRE>Encode a string in base-64.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>s</tt>
-</DD>
+<tt>s</tt>&nbsp;-&nbsp;The input string.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>The string encoded in base-64.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>PluginException if the encoding failed.</DD>
 </DL>
 <HR>
 <HR>
@@ -138,7 +136,7 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;<A HREF="#import_summary">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;<A HREF="#import_detail">IMPORT</A>&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>

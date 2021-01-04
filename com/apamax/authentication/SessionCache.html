@@ -38,36 +38,22 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>
 <H2>
 <FONT SIZE="-1">com.apamax.authentication</FONT>
 <BR>Event SessionCache</H2>
+<HR>An event which holds a cache of user sessions and tokens. Sessions have a timeout within which they must be refreshed to continue the session, and a maximum session length after which the session will expire even if refreshed.<DL>
+<DT>
+<B>See Also:</B>
+</DT>
+<DD>SessionCache#create&nbsp;-&nbsp;Session caches must be created with the create static action.</DD>
+<DD>SessionCache#destroy&nbsp;-&nbsp;Session caches must be destroyed with the destroy action before disposing of them.</DD>
+</DL>
 <HR>
-<HR>
-<A NAME="member_summary"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Member summary</B></FONT></TH>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;dictionary&lt;string,&nbsp;<A HREF="../../../com/apamax/authentication/SessionCacheEntry.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCacheEntry</A>&gt;</CODE></FONT></TD><TD><CODE><B><A HREF="SessionCache.html#cache">cache</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;float</CODE></FONT></TD><TD><CODE><B><A HREF="SessionCache.html#timeoutSecs">timeoutSecs</A></B></CODE>
-<br>
-</TD>
-</TR>
-<TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;float</CODE></FONT></TD><TD><CODE><B><A HREF="SessionCache.html#maxSessionLength">maxSessionLength</A></B></CODE>
-<br>
-</TD>
-</TR>
-</TABLE>&nbsp;<A NAME="action_summary"></A>
+<A NAME="action_summary"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Action summary</B></FONT></TH>
@@ -75,50 +61,34 @@
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="SessionCache.html#add()">add</A></B>(string&nbsp;user)</CODE>
 <br>
-</TD>
+<br>Add a new cache entry for a user and return the token. Should be called after authenticating the user via another means.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="SessionCache.html#check()">check</A></B>(string&nbsp;token)</CODE>
 <br>
-</TD>
+<br>Check whether a token is a valid session. If valid, refreshes the timestamp on the cache entry.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="SessionCache.html#checkHeader()">checkHeader</A></B>(string&nbsp;header)</CODE>
 <br>
-</TD>
+<br>Check whether an Authorization headers contains a valid token. If valid, refreshes the timestamp on the cache entry.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/SessionCache.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCache</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="SessionCache.html#create()">create</A></B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;<A HREF="../../../com/apamax/authentication/SessionCache.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCache</A></CODE></FONT></TD><TD><CODE>static </CODE><CODE><B><A HREF="SessionCache.html#create()">create</A></B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</CODE>
 <br>
-</TD>
+<br>Create a SesseionCache object.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="SessionCache.html#destroy()">destroy</A></B>()</CODE>
+<br>
+<br>Stop the background garbage collection listener. Must be called before discarding the last reference to the SessionCache.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="SessionCache.html#expireAll()">expireAll</A></B>(string&nbsp;user)</CODE>
 <br>
-</TD>
+<br>Remove all cache entries for a given user.</TD>
 </TR>
-</TABLE>&nbsp;<A NAME="member_detail"></A>
-<TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-<TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Member detail</B></FONT></TH>
-</TR>
-</TABLE>
-<A NAME="cache"></A>
-<H3>cache</H3>
-<PRE>dictionary&lt;string,&nbsp;<A HREF="../../../com/apamax/authentication/SessionCacheEntry.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCacheEntry</A>&gt;&nbsp;<B>cache</B>
-</PRE>
-<HR>
-<A NAME="maxSessionLength"></A>
-<H3>maxSessionLength</H3>
-<PRE>float&nbsp;<B>maxSessionLength</B>
-</PRE>
-<HR>
-<A NAME="timeoutSecs"></A>
-<H3>timeoutSecs</H3>
-<PRE>float&nbsp;<B>timeoutSecs</B>
-</PRE>
-<HR>
-<A NAME="action_detail"></A>
+</TABLE>&nbsp;<A NAME="action_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
 <TH ALIGN="left" COLSPAN="1"><FONT SIZE="+2"><B>Action detail</B></FONT></TH>
@@ -126,32 +96,33 @@
 </TABLE>
 <A NAME="add()"></A>
 <H3>add</H3>
-<PRE>string&nbsp;<B>add</B>(string&nbsp;user)</PRE>
-<DL>
+<PRE>string&nbsp;<B>add</B>(string&nbsp;user)</PRE>Add a new cache entry for a user and return the token. Should be called after authenticating the user via another means.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>user</tt>
-</DD>
+<tt>user</tt>&nbsp;-&nbsp;The user to add the entry for.</DD>
 </DL>
 <HR>
 <A NAME="check()"></A>
 <H3>check</H3>
-<PRE>string&nbsp;<B>check</B>(string&nbsp;token)</PRE>
-<DL>
+<PRE>string&nbsp;<B>check</B>(string&nbsp;token)</PRE>Check whether a token is a valid session. If valid, refreshes the timestamp on the cache entry.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>token</tt>
-</DD>
+<tt>token</tt>&nbsp;-&nbsp;The session token to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>The user for the token if valid, "" if not.</DD>
 </DL>
 <HR>
 <A NAME="checkHeader()"></A>
 <H3>checkHeader</H3>
-<PRE>string&nbsp;<B>checkHeader</B>(string&nbsp;header)</PRE>
-<DL>
+<PRE>string&nbsp;<B>checkHeader</B>(string&nbsp;header)</PRE>Check whether an Authorization headers contains a valid token. If valid, refreshes the timestamp on the cache entry.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
@@ -159,33 +130,49 @@
 <tt>header</tt>
 </DD>
 </DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>The user for the token if valid, "" if not.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException if it is not a CacheToken header.</DD>
+</DL>
 <HR>
 <A NAME="create()"></A>
 <H3>create</H3>
 <PRE>
-<A HREF="../../../com/apamax/authentication/SessionCache.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCache</A>&nbsp;static <B>create</B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLength)</PRE>
-<DL>
+<A HREF="../../../com/apamax/authentication/SessionCache.html" title="type in com.apamax.authentication">com.apamax.authentication.SessionCache</A>&nbsp;static <B>create</B>(integer&nbsp;timeoutSecs,&nbsp;integer&nbsp;maxSessionLengthSecs)</PRE>Create a SesseionCache object.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>timeoutSecs</tt>
-</DD>
+<tt>timeoutSecs</tt>&nbsp;-&nbsp;Cache entries must be checked at least once every timeoutSecs or they will expire.</DD>
 <DD>
-<tt>maxSessionLength</tt>
-</DD>
+<tt>maxSessionLengthSecs</tt>&nbsp;-&nbsp;Cache entries will always expire after at most maxSessionLengthSecs.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>A new SessionCache.</DD>
 </DL>
 <HR>
+<A NAME="destroy()"></A>
+<H3>destroy</H3>
+<PRE>void&nbsp;<B>destroy</B>()</PRE>Stop the background garbage collection listener. Must be called before discarding the last reference to the SessionCache.<HR>
 <A NAME="expireAll()"></A>
 <H3>expireAll</H3>
-<PRE>void&nbsp;<B>expireAll</B>(string&nbsp;user)</PRE>
-<DL>
+<PRE>void&nbsp;<B>expireAll</B>(string&nbsp;user)</PRE>Remove all cache entries for a given user.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
 <DD>
-<tt>user</tt>
-</DD>
+<tt>user</tt>&nbsp;-&nbsp;The user to expire cache entries for.</DD>
 </DL>
 <HR>
 <HR>
@@ -213,7 +200,7 @@
 </TD><TD ALIGN="right" VALIGN="top" ROWSPAN="3"><EM></EM></TD>
 </TR>
 <TR>
-<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_summary">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;<A HREF="#member_detail">MEMBER</A>&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">SUMMARY:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_summary">ACTION</A></FONT></TD><TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">DETAIL:&nbsp;IMPORT&nbsp;|&nbsp;CONSTANT&nbsp;|&nbsp;MEMBER&nbsp;|&nbsp;<A HREF="#action_detail">ACTION</A></FONT></TD>
 </TR>
 </TABLE>
 <HR>
