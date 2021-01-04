@@ -169,8 +169,8 @@ event SessionCacheEntry
 /**
   An event which holds a cache of user sessions and tokens.
   Sessions have a timeout within which they must be refreshed to continue the session, and a maximum session length after which the session will expire even if refreshed.
-	@see SessionCache#create() Session caches must be created with the create static action.
-	@see SessionCache#destroy() Session caches must be destroyed with the destroy action before disposing of them.
+	@see SessionCache#create Session caches must be created with the create static action.
+	@see SessionCache#destroy Session caches must be destroyed with the destroy action before disposing of them.
 */
 event SessionCache
 {
@@ -281,10 +281,10 @@ event SessionCache
 }
 
 /** An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk.
-  @see Authentication#createFromStore() Authentication objects must be created using one of the static create actions.
-  @see Authentication#createFromPath() Authentication objects must be created using one of the static create actions.
-  @see Authentication#createInMemory() Authentication objects must be created using one of the static create actions.
-  @see Authentication#initialize() Authentication objects must be initialized after creation using the initialize action.
+  @see Authentication#createFromStore Authentication objects must be created using one of the static create actions.
+  @see Authentication#createFromPath Authentication objects must be created using one of the static create actions.
+  @see Authentication#createInMemory Authentication objects must be created using one of the static create actions.
+  @see Authentication#initialize Authentication objects must be initialized after creation using the initialize action.
 */
 event Authentication
 {
@@ -465,7 +465,7 @@ on AuthenticationInitialized(auth.initialize()) {
 
 /**
   The results of an auth check against a CachedAuthentication object.
-  @see CachedAuthentication#checkHeader() This functions returns AuthResult objects.
+  @see CachedAuthentication#checkHeader This functions returns AuthResult objects.
 */
 event AuthResult
 {
@@ -495,10 +495,10 @@ event AuthResult
 }
 
 /** An authentication database storing hashed and salted passwords in a MemoryStore database either in memory or on disk. Includes a session cache for authenticating with a session token instead.
-  @see CachedAuthentication#createFromStore() CachedAuthentication objects must be created using one of the static create actions.
-  @see CachedAuthentication#createFromPath() CachedAuthentication objects must be created using one of the static create actions.
-  @see CachedAuthentication#createInMemory() CachedAuthentication objects must be created using one of the static create actions.
-  @see CachedAuthentication#initialize() CachedAuthentication objects must be initialized after creation using the initialize action.
+  @see CachedAuthentication#createFromStore CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#createFromPath CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#createInMemory CachedAuthentication objects must be created using one of the static create actions.
+  @see CachedAuthentication#initialize CachedAuthentication objects must be initialized after creation using the initialize action.
 */
 event CachedAuthentication
 {
