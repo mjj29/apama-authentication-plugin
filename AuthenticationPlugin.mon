@@ -169,8 +169,8 @@ event SessionCacheEntry
 /**
   An event which holds a cache of user sessions and tokens.
   Sessions have a timeout within which they must be refreshed to continue the session, and a maximum session length after which the session will expire even if refreshed.
-	@see SessionCache#create Session caches must be created with the create static action.
-	@see SessionCache#destroy Session caches must be destroyed with the destroy action before disposing of them.
+	@see SessionCache#create() Session caches must be created with the create static action.
+	@see SessionCache#destroy() Session caches must be destroyed with the destroy action before disposing of them.
 */
 event SessionCache
 {
@@ -310,7 +310,7 @@ event Authentication
 	Table users;
 
 	/** Create an Authentication database within an already created and prepared store in the application.
-	  @see Authentication#initialize The Authentication object must be initialized after creation.
+	  @see Authentication#initialize() The Authentication object must be initialized after creation.
 	  @param s A prepared and open Store object.
 	  @returns A new Authentication object.
 	*/
@@ -323,7 +323,7 @@ event Authentication
 	}
 
 	/** Create an Authentication database in the given path on disk.
-	  @see Authentication#initialize The Authentication object must be initialized after creation.
+	  @see Authentication#initialize() The Authentication object must be initialized after creation.
 	  @param s The path to the location of the database.
 	  @returns A new Authentication object.
 	*/
@@ -337,7 +337,7 @@ event Authentication
 
 	/** Create an Authentication database purely in memory.
 	  The contents will not persist between runs of the correlator.
-	  @see Authentication#initialize The Authentication object must be initialized after creation.
+	  @see Authentication#initialize() The Authentication object must be initialized after creation.
 	  @returns A new Authentication object.
 	*/
 	static action createInMemory() returns Authentication
@@ -465,7 +465,7 @@ on AuthenticationInitialized(auth.initialize()) {
 
 /**
   The results of an auth check against a CachedAuthentication object.
-  @see CachedAuthentication#checkHeader This functions returns AuthResult objects.
+  @see CachedAuthentication#checkHeader() This functions returns AuthResult objects.
 */
 event AuthResult
 {
@@ -508,7 +508,7 @@ event CachedAuthentication
 	SessionCache session;
 
 	/** Create a CachedAuthentication database within an already created and prepared store in the application.
-	  @see CachedAuthentication#initialize The CachedAuthentication object must be initialized after creation.
+	  @see CachedAuthentication#initialize() The CachedAuthentication object must be initialized after creation.
 	  @param s A prepared and open Store object.
 	  @returns A new CachedAuthentication object.
 	*/
@@ -517,7 +517,7 @@ event CachedAuthentication
 		return CachedAuthentication(Authentication.createFromStore(s), SessionCache.create(timeoutSecs, maxSessionLengthSecs));
 	}
 	/** Create an CachedAuthentication database in the given path on disk.
-	  @see CachedAuthentication#initialize The CachedAuthentication object must be initialized after creation.
+	  @see CachedAuthentication#initialize() The CachedAuthentication object must be initialized after creation.
 	  @param s The path to the location of the database.
 	  @returns A new CachedAuthentication object.
 	*/
@@ -527,7 +527,7 @@ event CachedAuthentication
 	}
 	/** Create an CachedAuthentication database purely in memory.
 	  The contents will not persist between runs of the correlator.
-	  @see CachedAuthentication#initialize The CachedAuthentication object must be initialized after creation.
+	  @see CachedAuthentication#initialize() The CachedAuthentication object must be initialized after creation.
 	  @returns A new CachedAuthentication object.
 	*/
 	static action createInMemory(integer timeoutSecs, integer maxSessionLengthSecs) returns CachedAuthentication
