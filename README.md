@@ -1,3 +1,6 @@
+[![PySys tests](https://github.com/mjj29/apama-authentication-plugin/workflows/Apama/badge.svg)](https://github.com/mjj29/apama-authentication-plugin/actions)
+[![Apama version](https://img.shields.io/badge/Apama-v10.5.3+-blue)](http://www.apamacommunity.com/)
+
 # EPL Authentication Plugin
 
 The standard Apama product can host an HTTP server which provides basic usename/password authentication via HTTP basic and a static password file. This new community plug-in provides a more fully-featured authentication layer for storing hashed and salted passwords using MemoryStore in a persistent but dynamically-updatable fashion. It also provides Base64 and HTTP Basic Authorization header encoding and decoding so that it can replace the static HTTP authentication seamlessly from EPL. Lastly, it provides a session-cache layer to provide authentication tokens which can be stored by web applications in cookies, with automatic session expiry and renewal.
