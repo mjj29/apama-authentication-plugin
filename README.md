@@ -1,5 +1,5 @@
 [![PySys tests](https://github.com/mjj29/apama-authentication-plugin/workflows/Apama/badge.svg)](https://github.com/mjj29/apama-authentication-plugin/actions)
-[![Apama version](https://img.shields.io/badge/Apama-v10.5.3+-blue)](http://www.apamacommunity.com/)
+[![Apama version](https://img.shields.io/badge/Uses-Apama v10.5.3+-blue)](http://www.apamacommunity.com/)
 
 # EPL Authentication Plugin
 
