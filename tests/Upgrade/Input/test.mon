@@ -1,0 +1,88 @@
+using com.apamax.authentication.Authentication;
+using com.apamax.authentication.AuthenticationInitialized;
+using com.apamax.authentication.HTTPBasic;
+using com.softwareag.connectivity.httpclient.Request;
+using com.apama.memorystore.Storage;
+using com.apama.memorystore.Store;
+using com.apama.memorystore.Finished;
+
+event TestRun
+{
+	string pathpath;
+	string storepath;
+	boolean initial;
+}
+
+monitor Test
+{
+	action onload()
+	{
+		on all TestRun() as tr {
+			on Finished(id=Storage.prepareOrCreate("teststore", tr.storepath)) {
+				Store store := Storage.open("teststore");
+				testAuthentication("fromStore", Authentication.createFromStore(store), true, tr.initial);
+			}
+			testAuthentication("fromPath", Authentication.createFromPath(tr.pathpath), true, tr.initial);
+			testAuthentication("inMemory", Authentication.createInMemory(), false, tr.initial);
+		}
+	}
+	action testAuthentication(string run, Authentication auth, boolean persists, boolean initial)
+	{
+		on AuthenticationInitialized(auth.initialize()) {
+			log "Starting tests for "+run at INFO;
+			// has users
+			Asserts.assertEquals("hasUserNonExistent", auth.hasUser("bar"), false);
+			Asserts.assertEquals("hasUserExistent", auth.hasUser("foo"), persists and not initial);
+			Asserts.assertEquals("checkUserRecovered", auth.checkUser("foo", "bar"), persists and not initial);
+			auth.addUser("foo", "bar", ["admin", "user"]);
+			auth.addUser("baz", "bar", ["user"]);
+			Asserts.assertEquals("hasUserAdded1", auth.hasUser("foo"), true);
+			Asserts.assertEquals("hasUserAdded2", auth.hasUser("baz"), true);
+
+			// groups
+			Asserts.assertEquals("getGroups1", auth.getGroups("foo"), ["admin", "user"]);
+			Asserts.assertEquals("getGroups2", auth.getGroups("baz"), ["user"]);
+			Asserts.assertThrows("getGroupsThrow", auth.getGroups, [<any>"wobble"], "IllegalArgumentException");
+			Asserts.assertEquals("hasGroup1", auth.hasGroup("foo", "user"), true);
+			Asserts.assertEquals("hasGroup2", auth.hasGroup("foo", "admin"), true);
+			Asserts.assertEquals("hasGroup3", auth.hasGroup("foo", "wibble"), false);
+			Asserts.assertEquals("hasGroup4", auth.hasGroup("wobble", "wibble"), false);
+			auth.setGroups("foo", ["cobras"]);
+			auth.setGroups("baz", new sequence<string>);
+			Asserts.assertThrows("setGroupThrow", auth.setGroups, [<any>"wobble", ["wibble"]], "IllegalArgumentException");
+			Asserts.assertEquals("getGroups3", auth.getGroups("foo"), ["cobras"]);
+			Asserts.assertEquals("getGroups4", auth.getGroups("baz"), new sequence<string>);
+
+			// remove user
+			auth.removeUser("baz");
+			Asserts.assertEquals("hasUserRemoved", auth.hasUser("baz"), false);
+
+			// check user
+			Asserts.assertEquals("checkUserValid", auth.checkUser("foo", "bar"), true);
+			Asserts.assertEquals("checkUserWrongPW", auth.checkUser("foo", "baz"), false);
+			Asserts.assertEquals("checkUserNonExistent", auth.checkUser("bar", "bar"), false);
+			Asserts.assertEquals("checkUserRemoved", auth.checkUser("baz", "bar"), false);
+
+			// headers
+			HTTPBasic basic := HTTPBasic.createFromCreds("foo", "bar");
+			Request req := new Request;
+			basic.addAuthHeader(req);
+			Asserts.assertEquals("checkHeaderValid", auth.checkHeader(basic.getAuthHeader()), "foo");
+			Asserts.assertEquals("checkRequestValid", auth.checkRequest(req), "foo");
+			Asserts.assertThrows("checkHeaderMalformed", auth.checkHeader, [<any> "abcde"], "IllegalArgumentException");
+			basic := HTTPBasic.createFromCreds("foo", "baz");
+			basic.addAuthHeader(req);
+			Asserts.assertEquals("checkHeaderInvalid", auth.checkHeader(basic.getAuthHeader()), "");
+			Asserts.assertEquals("checkRequestInvalid", auth.checkRequest(req), "");
+
+			// set password
+			auth.setPassword("foo", "animaniacs");
+			Asserts.assertEquals("checkUserValid2", auth.checkUser("foo", "animaniacs"), true);
+			// set it back for recovery
+			auth.setPassword("foo", "bar");
+			Asserts.assertThrows("setPasswordThrow", auth.setPassword, [<any>"wobble", "wibble"], "IllegalArgumentException");
+
+			log "Completed tests for "+run at INFO;
+		}
+	}
+}
