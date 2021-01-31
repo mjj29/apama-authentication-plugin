@@ -119,6 +119,11 @@ event User
 {
 	string name;
 	string password;
+	sequence<string> groups;
+	action hasGroup(string #group) returns boolean
+	{
+		return groups.indexOf(#group) >= 0;
+	}
 }
 
 /** 
@@ -389,18 +394,19 @@ on AuthenticationInitialized(auth.initialize()) {
 	}
 
 	/** Add a user to the authentication database.
-	  Replaces an existing user's password.
+	  Replaces an existing user's password and groups.
 	  The password is stored salted and hashed using MD5 crypt() password hashing.
 	  @param username The username of the new user.
 	  @param password The password of the new user.
+	  @param groups The groups this user is a member of.
 	*/
-	action addUser(string username, string password)
+	action addUser(string username, string password, sequence<string> groups)
 	{
 		Row r := users.get(username);
-		r.setAll(User(username, plugin.hash(password, "")));
+		r.setAll(User(username, plugin.hash(password, ""), groups));
 		r.forceCommit();
 		integer _ := users.persist();
-		log "Added user "+username at DEBUG;
+		log "Added user "+username+" with groups "+groups.toString() at DEBUG;
 	}
 
 	/** Remove a user from the authentication database.
@@ -416,6 +422,42 @@ on AuthenticationInitialized(auth.initialize()) {
 		log "Removed user "+username at DEBUG;
 	}
 
+	/** Set the password of a user.
+	  @param password The new password.
+	  @throws IllegalArgumentException if the username is not found.
+	*/
+	action setPassword(string username, string password)
+	{
+		Row r := users.get(username);
+		if not r.inTable() {
+			throw Exception("Unknown user "+username, "IllegalArgumentException");
+		}
+		User u := <User> r.getAll(new User);
+		u.password := plugin.hash(password, "");
+		r.setAll(u);
+		r.forceCommit();
+		integer _ := users.persist();
+		log "Updated password for "+username at DEBUG;
+	}
+
+	/** Set the groups of a user.
+	  @param groups The replacement groups.
+	  @throws IllegalArgumentException if the username is not found.
+	*/
+	action setGroups(string username, sequence<string> groups)
+	{
+		Row r := users.get(username);
+		if not r.inTable() {
+			throw Exception("Unknown user "+username, "IllegalArgumentException");
+		}
+		User u := <User> r.getAll(new User);
+		u.groups := groups;
+		r.setAll(u);
+		r.forceCommit();
+		integer _ := users.persist();
+		log "Set groups for "+username+" to "+groups.toString() at DEBUG;
+	}
+
 	/** Returns true if the database has a user of a given name.
 	  @param username The name of the user to check.
 	  @returns True if the database has the user, false if not.
@@ -424,6 +466,36 @@ on AuthenticationInitialized(auth.initialize()) {
 	{
 		Row r := users.get(username);
 		return r.inTable();
+	}
+
+	/** Return the groups for a given user.
+	  @param username The username to check.
+	  @return The groups the user is a member of.
+	  @throws IllegalArgumentException If the username is not found.
+	*/
+	action getGroups(string username) returns sequence<string>
+	{
+		Row r := users.get(username);
+		if not r.inTable() {
+			throw Exception("Unknown user "+username, "IllegalArgumentException");
+		}
+		User u := <User> r.getAll(new User);
+		return u.groups;
+	}
+
+	/** Checks if a user is a member of a given group.
+	  @param username The username to check.
+	  @param #group The group to check.
+	  @returns True if the username exists and is in the group, false otherwise.
+	*/
+	action hasGroup(string username, string #group) returns boolean
+	{
+		Row r := users.get(username);
+		if not r.inTable() {
+			return false;
+		}
+		User u := <User> r.getAll(new User);
+		return u.hasGroup(#group);
 	}
 
 	/** Check a users password.
@@ -557,9 +629,9 @@ on AuthenticationInitialized(auth.initialize()) {
 	  @param username The username of the new user.
 	  @param password The password of the new user.
 	*/
-	action addUser(string username, string password)
+	action addUser(string username, string password, sequence<string> groups)
 	{
-		auth.addUser(username, password);
+		auth.addUser(username, password, groups);
 	}
 
 	/** Remove a user from the authentication database.
@@ -590,6 +662,45 @@ on AuthenticationInitialized(auth.initialize()) {
 	{
 		return auth.checkUser(username, password);
 	}
+
+	/** Set the password of a user.
+	  @param password The new password.
+	  @throws IllegalArgumentException if the username is not found.
+	*/
+	action setPassword(string username, string password)
+	{
+		auth.setPassword(username, password);
+	}
+
+	/** Set the groups of a user.
+	  @param groups The replacement groups.
+	  @throws IllegalArgumentException if the username is not found.
+	*/
+	action setGroups(string username, sequence<string> groups)
+	{
+		auth.setGroups(username, groups);
+	}
+
+	/** Return the groups for a given user.
+	  @param username The username to check.
+	  @return The groups the user is a member of.
+	  @throws IllegalArgumentException If the username is not found.
+	*/
+	action getGroups(string username) returns sequence<string>
+	{
+		return auth.getGroups(username);
+	}
+
+	/** Checks if a user is a member of a given group.
+	  @param username The username to check.
+	  @param #group The group to check.
+	  @returns True if the username exists and is in the group, false otherwise.
+	*/
+	action hasGroup(string username, string #group) returns boolean
+	{
+		return auth.hasGroup(username, #group);
+	}
+
 
 	/** Check an HTTP Authorization header.
 	  Will validate either an HTTP Basic auth header or a CacheToken session cache token.

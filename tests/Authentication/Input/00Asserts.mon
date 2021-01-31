@@ -18,10 +18,22 @@ event Asserts
 				}
 			}
 			default: {
-				return false;
+				return a.toString() = b.toString();
 			}
 		}
 		return true;
+	}
+
+	static action assertThrows(string name, any #action, sequence<any> args, string type)
+	{
+		action<sequence<any> > returns any act := #action.getGenericAction();
+		try {
+			any _ := act(args);
+			log "assert fail "+name+": action did not throw" at ERROR;
+		} catch (com.apama.exceptions.Exception e) {
+			log name+" caught expected exception "+e.toString() at INFO;
+			assertEquals(name, type, e.getType());
+		}
 	}
 	
 	static action assertEquals(string name, any a, any b)

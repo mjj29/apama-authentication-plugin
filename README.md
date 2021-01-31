@@ -53,6 +53,8 @@ To manage the database use the `addUser`, `removeUser` and `hasUser` functions. 
 	boolean valid := auth.checkUser(username, password); // check from user/password
 	boolean valid := auth.checkHeader(authHeader); // check an HTTP authorization header
 
+Users can also be assigned groups which can be checked with the `hasGroup` and `getGroups` actions. 
+
 ## Using a session cache
 
 You can also use the [CachedAuthentication](https://mjj29.github.io/apama-authentication-plugin/com/apamax/authentication/CachedAuthentication.html) event to provide a session cache on top of the authentication database. Creating and initializing the authentication database is the same as with the Authentication event, as is user management. The difference is with validation. When validating, use the `checkHeader` method, which returns an `AuthResult` type to handle caching.

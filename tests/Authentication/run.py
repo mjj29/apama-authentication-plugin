@@ -27,8 +27,8 @@ class PySysTest(BaseTest):
 		for test in tests:
 			if test.endswith('.mon'):
 				corr.injectEPL(test)
-				corr.sendEventStrings(event)
-				corr.flush(count=2)
+		corr.sendEventStrings(event)
+		corr.flush(count=2)
 
 	def validate(self):
 		for i in [ "fromStore", "fromPath", "inMemory" ]:
