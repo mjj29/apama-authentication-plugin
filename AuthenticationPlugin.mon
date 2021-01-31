@@ -20,6 +20,7 @@ using com.apama.memorystore.Storage;
 using com.apama.memorystore.Store;
 using com.apama.memorystore.Table;
 using com.apama.memorystore.Finished;
+using com.apama.memorystore.Schema;
 using com.apama.memorystore.Row;
 using com.apama.memorystore.Iterator;
 using com.apama.exceptions.Exception;
@@ -369,28 +370,55 @@ on AuthenticationInitialized(auth.initialize()) {
 		if INIT_IN_MEMORY = initMode {
 			on Finished(id=storage.prepareInMemory("c.apx.auth.Authentication.Memory")) {
 				store := storage.open("c.apx.auth.Authentication.Memory");
-				on Finished(id=store.prepareFromAny(new User)) {
-					users := store.open("com.apamax.authentication.User");
-					route AuthenticationInitialized(id);
-				}
+				initFromStore(store, id);
 			}
 		} else if INIT_FROM_PATH = initMode {
 			on Finished(id=storage.prepareOrCreate("c.apx.auth.Authentication.Disk", path)) {
 				store := storage.open("c.apx.auth.Authentication.Disk");
-				on Finished(id=store.prepareFromAny(new User)) {
-					users := store.open("com.apamax.authentication.User");
-					route AuthenticationInitialized(id);
-				}
+				initFromStore(store, id);
 			}
 		} else if INIT_FROM_STORE = initMode {
-			on Finished(id=store.prepareFromAny(new User)) {
-				users := store.open("com.apamax.authentication.User");
-				route AuthenticationInitialized(id);
-			}
+			initFromStore(store, id);
 		} else {
 			throw Exception("Incorrect initialization mode", "IllegalArgumentException");
 		}
 		return id;
+	}
+
+	action initFromStore(Store store, integer id)
+	{
+		on Finished(id=store.prepare("com.apamax.authentication.User", Schema(["name", "password"], ["string", "string"], false, false, "", "", "", ""))) as oldf and
+			Finished(id=store.prepare("com.apamax.authentication.User.v2", Schema.schemaFromAny(new User))) as newf {
+
+			if oldf.success {
+				Table oldSchema := store.open("com.apamax.authentication.User");
+				users := store.open("com.apamax.authentication.User.v2");
+				Iterator it := oldSchema.begin();
+				boolean upgraded := false;
+				if not it.done() {
+					log "Upgrading old database schema" at DEBUG;
+					log "Upgrading old database schema" at INFO;
+					upgraded := true;
+				}
+				while not it.done() {
+					Row oldr := it.getRow();
+					Row newr := users.get(it.getKey());
+					if not newr.inTable() {
+						log "Upgraded user "+it.getKey();
+						newr.setAll(User(oldr.getString("name"), oldr.getString("password"), new sequence<string>));
+						newr.forceCommit();
+					}		
+					it.step();
+				}
+				if upgraded {
+					oldSchema.clear();
+					integer _ := oldSchema.persist();
+					_ := users.persist();
+				}
+			}
+
+			route AuthenticationInitialized(id);
+		}
 	}
 
 	/** Add a user to the authentication database.
