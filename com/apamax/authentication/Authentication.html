@@ -72,9 +72,9 @@
 <TH ALIGN="left" COLSPAN="2"><FONT SIZE="+2"><B>Action summary</B></FONT></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#addUser()">addUser</A></B>(string&nbsp;username,&nbsp;string&nbsp;password)</CODE>
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#addUser()">addUser</A></B>(string&nbsp;username,&nbsp;string&nbsp;password,&nbsp;sequence&lt;string&gt;&nbsp;groups)</CODE>
 <br>
-<br>Add a user to the authentication database. Replaces an existing user's password. The password is stored salted and hashed using MD5 crypt() password hashing.</TD>
+<br>Add a user to the authentication database. Replaces an existing user's password and groups. The password is stored salted and hashed using MD5 crypt() password hashing.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;string</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#checkHeader()">checkHeader</A></B>(string&nbsp;authHeader)</CODE>
@@ -107,6 +107,16 @@
 <br>Create an Authentication database purely in memory. The contents will not persist between runs of the correlator.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;sequence&lt;string&gt;</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#getGroups()">getGroups</A></B>(string&nbsp;username)</CODE>
+<br>
+<br>Return the groups for a given user.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;boolean</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#hasGroup()">hasGroup</A></B>(string&nbsp;username,&nbsp;string&nbsp;#group)</CODE>
+<br>
+<br>Checks if a user is a member of a given group.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;boolean</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#hasUser()">hasUser</A></B>(string&nbsp;username)</CODE>
 <br>
 <br>Returns true if the database has a user of a given name.</TD>
@@ -121,6 +131,16 @@
 <br>
 <br>Remove a user from the authentication database. Does nothing silently if the user does not exist.</TD>
 </TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#setGroups()">setGroups</A></B>(string&nbsp;username,&nbsp;sequence&lt;string&gt;&nbsp;groups)</CODE>
+<br>
+<br>Set the groups of a user.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#setPassword()">setPassword</A></B>(string&nbsp;username,&nbsp;string&nbsp;password)</CODE>
+<br>
+<br>Set the password of a user.</TD>
+</TR>
 </TABLE>&nbsp;<A NAME="action_detail"></A>
 <TABLE BORDER="1" WIDTH="100%" CELLPADDING="3" CELLSPACING="0" SUMMARY="">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -129,7 +149,7 @@
 </TABLE>
 <A NAME="addUser()"></A>
 <H3>addUser</H3>
-<PRE>void&nbsp;<B>addUser</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>Add a user to the authentication database. Replaces an existing user's password. The password is stored salted and hashed using MD5 crypt() password hashing.<DL>
+<PRE>void&nbsp;<B>addUser</B>(string&nbsp;username,&nbsp;string&nbsp;password,&nbsp;sequence&lt;string&gt;&nbsp;groups)</PRE>Add a user to the authentication database. Replaces an existing user's password and groups. The password is stored salted and hashed using MD5 crypt() password hashing.<DL>
 <DT>
 <B>Parameters:</B>
 </DT>
@@ -137,6 +157,8 @@
 <tt>username</tt>&nbsp;-&nbsp;The username of the new user.</DD>
 <DD>
 <tt>password</tt>&nbsp;-&nbsp;The password of the new user.</DD>
+<DD>
+<tt>groups</tt>&nbsp;-&nbsp;The groups this user is a member of.</DD>
 </DL>
 <HR>
 <A NAME="checkHeader()"></A>
@@ -267,6 +289,46 @@
 <A HREF="../../../com/apamax/authentication/Authentication.html#initialize()" title="Action in com.apamax.authentication.">com.apamax.authentication.Authentication#initialize()</A>&nbsp;-&nbsp;The Authentication object must be initialized after creation.</DD>
 </DL>
 <HR>
+<A NAME="getGroups()"></A>
+<H3>getGroups</H3>
+<PRE>sequence&lt;string&gt;&nbsp;<B>getGroups</B>(string&nbsp;username)</PRE>Return the groups for a given user.<DL>
+<DT>
+<B>Parameters:</B>
+</DT>
+<DD>
+<tt>username</tt>&nbsp;-&nbsp;The username to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>The groups the user is a member of.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException If the username is not found.</DD>
+</DL>
+<HR>
+<A NAME="hasGroup()"></A>
+<H3>hasGroup</H3>
+<PRE>boolean&nbsp;<B>hasGroup</B>(string&nbsp;username,&nbsp;string&nbsp;#group)</PRE>Checks if a user is a member of a given group.<DL>
+<DT>
+<B>Parameters:</B>
+</DT>
+<DD>
+<tt>username</tt>&nbsp;-&nbsp;The username to check.</DD>
+<DD>
+<tt>#group</tt>&nbsp;-&nbsp;The group to check.</DD>
+</DL>
+<DL>
+<DT>
+<B>Returns:</B>
+</DT>
+<DD>True if the username exists and is in the group, false otherwise.</DD>
+</DL>
+<HR>
 <A NAME="hasUser()"></A>
 <H3>hasUser</H3>
 <PRE>boolean&nbsp;<B>hasUser</B>(string&nbsp;username)</PRE>Returns true if the database has a user of a given name.<DL>
@@ -307,6 +369,44 @@
 </DT>
 <DD>
 <tt>username</tt>&nbsp;-&nbsp;The username of the user to remove.</DD>
+</DL>
+<HR>
+<A NAME="setGroups()"></A>
+<H3>setGroups</H3>
+<PRE>void&nbsp;<B>setGroups</B>(string&nbsp;username,&nbsp;sequence&lt;string&gt;&nbsp;groups)</PRE>Set the groups of a user.<DL>
+<DT>
+<B>Parameters:</B>
+</DT>
+<DD>
+<tt>username</tt>
+</DD>
+<DD>
+<tt>groups</tt>&nbsp;-&nbsp;The replacement groups.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException if the username is not found.</DD>
+</DL>
+<HR>
+<A NAME="setPassword()"></A>
+<H3>setPassword</H3>
+<PRE>void&nbsp;<B>setPassword</B>(string&nbsp;username,&nbsp;string&nbsp;password)</PRE>Set the password of a user.<DL>
+<DT>
+<B>Parameters:</B>
+</DT>
+<DD>
+<tt>username</tt>
+</DD>
+<DD>
+<tt>password</tt>&nbsp;-&nbsp;The new password.</DD>
+</DL>
+<DL>
+<DT>
+<B>Throws:</B>
+</DT>
+<DD>IllegalArgumentException if the username is not found.</DD>
 </DL>
 <HR>
 <HR>
