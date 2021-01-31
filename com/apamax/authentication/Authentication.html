@@ -122,6 +122,11 @@
 <br>Returns true if the database has a user of a given name.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;void</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#initFromStore()">initFromStore</A></B>(com.apama.memorystore.Store&nbsp;store,&nbsp;integer&nbsp;id)</CODE>
+<br>
+</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1"><CODE>&nbsp;integer</CODE></FONT></TD><TD><CODE></CODE><CODE><B><A HREF="Authentication.html#initialize()">initialize</A></B>()</CODE>
 <br>
 <br>Initialize the Authentication database. The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like: <pre> on AuthenticationInitialized(auth.initialize()) { // you can use auth here } </pre></TD>
@@ -345,6 +350,28 @@
 <DD>True if the database has the user, false if not.</DD>
 </DL>
 <HR>
+<A NAME="initFromStore()"></A>
+<H3>initFromStore</H3>
+<PRE>void&nbsp;<B>initFromStore</B>(com.apama.memorystore.Store&nbsp;store,&nbsp;integer&nbsp;id)</PRE>
+<DL>
+<DT>
+<B>Parameters:</B>
+</DT>
+<DD>
+<tt>store</tt>
+</DD>
+<DD>
+<tt>id</tt>
+</DD>
+</DL>
+<DL>
+<DT>
+<B>Routes:</B>
+</DT>
+<DD>
+<A HREF="../../../com/apamax/authentication/AuthenticationInitialized.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthenticationInitialized</A>&nbsp;-&nbsp;</DD>
+</DL>
+<HR>
 <A NAME="initialize()"></A>
 <H3>initialize</H3>
 <PRE>integer&nbsp;<B>initialize</B>()</PRE>Initialize the Authentication database. The database cannot be used until this has completed and routed an AuthenticationInitialized event. It should be called like: <pre> on AuthenticationInitialized(auth.initialize()) { // you can use auth here } </pre><DL>
@@ -352,13 +379,6 @@
 <B>Returns:</B>
 </DT>
 <DD>An ID for the associated AuthenticationInitialized completion event.</DD>
-</DL>
-<DL>
-<DT>
-<B>Routes:</B>
-</DT>
-<DD>
-<A HREF="../../../com/apamax/authentication/AuthenticationInitialized.html" title="type in com.apamax.authentication">com.apamax.authentication.AuthenticationInitialized</A>&nbsp;-&nbsp;Routes an AuthenticationInitialized event when the asynchronous initialization completes.</DD>
 </DL>
 <HR>
 <A NAME="removeUser()"></A>
